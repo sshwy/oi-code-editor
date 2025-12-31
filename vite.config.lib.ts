@@ -12,7 +12,7 @@ export default defineConfig({
   publicDir: false,
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/components/index.ts'),
+      entry: resolve(__dirname, 'src/index.ts'),
       name: 'OiCodeEditor',
       fileName: 'oi-code-editor',
     },
