@@ -88,7 +88,7 @@ export interface InitOptions extends StateInitOptions {
   onUpdate?: (info: ViewUpdateInfo) => void;
   onClickTab?: (item: TabItem) => void;
   // callback when the panel is mounted
-  onPanelMount?: (this: Panel) => void;
+  onBottomPanelMount?: (this: Panel) => void;
   // function to translate messages
   translate?: (msg: string) => string;
 }
@@ -403,7 +403,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         });
       },
       mount() {
-        init.onPanelMount?.call(this);
+        init.onBottomPanelMount?.call(this);
       },
     };
   };

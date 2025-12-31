@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:content": [content: string];
-  "panelMount": [el: HTMLElement]
+  "bottomPanelMount": [el: HTMLElement]
 }>();
 
 const activeTab = defineModel<string | undefined>("activeTab");
@@ -44,10 +44,10 @@ onMounted(() => {
     onClickTab(item) {
       activeTab.value = item.id;
     },
-    onPanelMount() {
+    onBottomPanelMount() {
       const pannelWrapper = this.dom.parentElement;
       if (!pannelWrapper) return;
-      emit("panelMount", pannelWrapper);
+      emit("bottomPanelMount", pannelWrapper);
     },
     onUpdate(info) {
       const content = info.update.state.doc.toString();
