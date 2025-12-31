@@ -32,7 +32,11 @@ const items = [{
     <div class="max-w-3xl px-4 mx-auto">
       <h1 class="text-2xl font-medium my-4">Sshwy's OI Code Editor</h1>
 
-      <CodeViewer :items="items" class="border border-slate-300 dark:border-slate-700" :color-mode="presentColor" />
+      <CodeViewer
+        :items="items"
+        class="border border-slate-300 dark:border-slate-700"
+        :color-mode="presentColor"
+      />
     </div>
   </div>
 </template>

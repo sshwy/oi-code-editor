@@ -1,11 +1,14 @@
 {
   "name": "oi-code-editor",
   "version": "0.0.0",
-  "type": "module",
   "files": [
     "dist",
     "README.md"
   ],
+  "type": "module",
+  "main": "dist/oi-code-editor.umd.cjs",
+  "module": "dist/oi-code-editor.js",
+  "types": "dist/types/components/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/components/index.d.ts",
@@ -13,14 +16,12 @@
       "require": "./dist/oi-code-editor.umd.cjs"
     }
   },
-  "main": "dist/oi-code-editor.umd.cjs",
-  "module": "dist/oi-code-editor.js",
-  "types": "dist/types/components/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build --outDir docs-dist",
     "build:lib": "vite build --config vite.config.lib.ts && vue-tsc -b",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fmt": "pnpm dlx oxfmt@latest"
   },
   "dependencies": {
     "@babel/runtime": "^7.23.0",

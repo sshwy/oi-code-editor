@@ -11,4 +11,3 @@
   },
   "include": ["src/components/**/*.ts", "src/lib/**/*.ts", "src/components/**/*.vue"]
 }
-

@@ -1,29 +1,28 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import { resolve } from "path";
 
 export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '~': resolve(__dirname, './src'),
+      "~": resolve(__dirname, "./src"),
     },
   },
   publicDir: false,
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'OiCodeEditor',
-      fileName: 'oi-code-editor',
+      entry: resolve(__dirname, "src/index.ts"),
+      name: "OiCodeEditor",
+      fileName: "oi-code-editor",
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ["vue"],
       output: {
         globals: {
-          vue: 'Vue',
+          vue: "Vue",
         },
       },
     },
   },
-})
-
+});

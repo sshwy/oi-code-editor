@@ -1,10 +1,4 @@
-import {
-  EditorState,
-  Compartment,
-  StateField,
-  StateEffect,
-  Facet,
-} from "@codemirror/state";
+import { EditorState, Compartment, StateField, StateEffect, Facet } from "@codemirror/state";
 import type { Extension, StateEffectType } from "@codemirror/state";
 import {
   EditorView,
@@ -166,12 +160,7 @@ function createBottomPanelItem(
 ) {
   const el = document.createElement("div");
   el.style.padding = "2px 4px";
-  el.classList.add(
-    "hover:bg-black/5",
-    "cursor-pointer",
-    "select-none",
-    "dark:hover:bg-white/10",
-  );
+  el.classList.add("hover:bg-black/5", "cursor-pointer", "select-none", "dark:hover:bg-white/10");
 
   // initialization
   renderer.call(el, view);
@@ -232,10 +221,7 @@ class ExtMap<T extends Record<string, Extension>> {
   }
 
   reconfigure(key: keyof T) {
-    return [
-      this.compartment.reconfigure(this.extensions[key] || []),
-      this.setKey.of(key),
-    ];
+    return [this.compartment.reconfigure(this.extensions[key] || []), this.setKey.of(key)];
   }
 
   read(state: EditorState) {
@@ -275,7 +261,7 @@ const tabsField = (init: TabsState) =>
 
 // Create a code editor view on the given element and items.
 export function useEditorView(el: Element, init: InitOptions) {
-  const t = init.translate || (msg => msg);
+  const t = init.translate || ((msg) => msg);
 
   const staticExtensions = {
     common: [
@@ -316,9 +302,7 @@ export function useEditorView(el: Element, init: InitOptions) {
     editModes.of(init.editMode || "simple"),
     lineWraps.of(init.lineWrap || "nowrap"),
     mergeViewCompart.of(
-      init.comparedContent === undefined
-        ? []
-        : createMergeView(init.comparedContent),
+      init.comparedContent === undefined ? [] : createMergeView(init.comparedContent),
     ),
     langSupports.of(init.lang || "text"),
   ];
@@ -335,37 +319,29 @@ export function useEditorView(el: Element, init: InitOptions) {
         };
         init.onUpdate?.(info);
       }
-      destroy() { }
+      destroy() {}
     },
   );
 
-  const extraExt = init.readonly
-    ? staticExtensions.readonly
-    : [staticExtensions.edit, WatchUpdate];
+  const extraExt = init.readonly ? staticExtensions.readonly : [staticExtensions.edit, WatchUpdate];
 
   const bottomPanel = (view: EditorView): Panel => {
     const dom = document.createElement("div");
     dom.classList.add("flex", "gap-1", "text-[12px]");
 
     const charCount = createBottomPanelItem(view, function (view) {
-      this.textContent =
-        view.state.doc.length + " " + t("code_editor.num_characters");
+      this.textContent = view.state.doc.length + " " + t("num_characters");
     });
 
     const vimStatus = createBottomPanelItem(
       view,
       function (view) {
-        this.textContent =
-          editModes.read(view.state) === "vim"
-            ? t("code_editor.vim_mode")
-            : t("code_editor.simple_mode");
+        this.textContent = editModes.read(view.state) === "vim" ? t("vim_mode") : t("simple_mode");
       },
       {
         click: function (view) {
           view.dispatch({
-            effects: editModes.reconfigure(
-              editModes.read(view.state) === "vim" ? "simple" : "vim",
-            ),
+            effects: editModes.reconfigure(editModes.read(view.state) === "vim" ? "simple" : "vim"),
           });
         },
       },
@@ -375,9 +351,7 @@ export function useEditorView(el: Element, init: InitOptions) {
       view,
       function (view) {
         this.textContent =
-          lineWraps.read(view.state) === "wrap"
-            ? t("code_editor.line_wrap")
-            : t("code_editor.line_nowrap");
+          lineWraps.read(view.state) === "wrap" ? t("line_wrap") : t("line_nowrap");
       },
       {
         click: function (view) {
@@ -410,7 +384,7 @@ export function useEditorView(el: Element, init: InitOptions) {
   };
 
   const onClickTab = init.onClickTab;
-  const commonTabClassList = init.tabClassList || []
+  const commonTabClassList = init.tabClassList || [];
   const tabsBar = (view: EditorView): Panel => {
     const dom = document.createElement("div");
     dom.classList.add("flex", "overflow-x-auto", "text-[13px]");
@@ -418,17 +392,8 @@ export function useEditorView(el: Element, init: InitOptions) {
     const init = view.state.facet(tabsFacet);
     if (!init) throw new Error("TabsField not initialized");
 
-    const updateTabEl = (
-      el: Element,
-      label: string,
-      active: boolean,
-      classList: string[],
-    ) => {
-      const activeClassList = [
-        "bg-white/90",
-        "dark:bg-white/10",
-        "text-highlighted",
-      ];
+    const updateTabEl = (el: Element, label: string, active: boolean, classList: string[]) => {
+      const activeClassList = ["bg-white/90", "dark:bg-white/10", "text-highlighted"];
       el.classList.value = "";
       el.classList.add(...classList);
       if (active) {
@@ -462,12 +427,10 @@ export function useEditorView(el: Element, init: InitOptions) {
           const id = child.getAttribute("data-id");
           const item = state.tabs.find((tab) => tab.id === id);
           if (item) {
-            updateTabEl(
-              child,
-              item.label || item.id,
-              item.id === state.activeId,
-              [...commonTabClassList, ...(item.classList || [])],
-            );
+            updateTabEl(child, item.label || item.id, item.id === state.activeId, [
+              ...commonTabClassList,
+              ...(item.classList || []),
+            ]);
           }
         }
       } else {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { useEditorView, type EditorInstance, type LangKind, type TabItem } from '~/lib/useEditorView';
+import { useEditorView, type EditorInstance, type InitOptions, type LangKind, type TabItem } from '~/lib/useEditorView';
 
 const props = defineProps<{
   content: string;
@@ -37,36 +37,48 @@ const commonTabClassList = [
   "text-nowrap",
 ];
 
+const options: InitOptions = {
+  readonly: !props.editable,
+  color: props.colorMode || 'light',
+  content: props.content,
+  comparedContent: props.comparedContent,
+  lang: props.lang,
+  showStatusPanel: !props.noStatusPanel,
+  lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
+  tabClassList: commonTabClassList,
+  tabs: props.tabs
+    ? {
+      tabs: props.tabs,
+      activeId: activeTab.value,
+    }
+    : undefined,
+  onClickTab(item) {
+    activeTab.value = item.id;
+  },
+  onBottomPanelMount() {
+    const pannelWrapper = this.dom.parentElement;
+    if (!pannelWrapper) return;
+    emit("bottomPanelMount", pannelWrapper);
+  },
+  onUpdate(info) {
+    const content = info.update.state.doc.toString();
+    emit("update:content", content);
+  },
+  translate(msg) {
+    const names = {
+      simple_mode: "简单模式",
+      vim_mode: "Vim 模式",
+      line_nowrap:"不自动换行",
+      line_wrap: "自动换行",
+      num_characters: "字符",
+    }
+    return names[msg as keyof typeof names] || msg;
+  },
+}
+
 onMounted(() => {
   if (!editorRoot.value) return;
-  inst.value = useEditorView(editorRoot.value, {
-    readonly: !props.editable,
-    color: props.colorMode || 'light',
-    content: props.content,
-    comparedContent: props.comparedContent,
-    lang: props.lang,
-    showStatusPanel: !props.noStatusPanel,
-    lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
-    tabClassList: commonTabClassList,
-    tabs: props.tabs
-      ? {
-          tabs: props.tabs,
-          activeId: activeTab.value,
-        }
-      : undefined,
-    onClickTab(item) {
-      activeTab.value = item.id;
-    },
-    onBottomPanelMount() {
-      const pannelWrapper = this.dom.parentElement;
-      if (!pannelWrapper) return;
-      emit("bottomPanelMount", pannelWrapper);
-    },
-    onUpdate(info) {
-      const content = info.update.state.doc.toString();
-      emit("update:content", content);
-    },
-  });
+  inst.value = useEditorView(editorRoot.value, options);
 
   // to make the new props and old props different, we need to destruct the props
   // in the getter function
@@ -84,9 +96,9 @@ onMounted(() => {
           showStatusPanel: !props.noStatusPanel,
           tabs: props.tabs
             ? {
-                tabs: props.tabs,
-                activeId: activeTab,
-              }
+              tabs: props.tabs,
+              activeId: activeTab,
+            }
             : undefined,
           color: props.colorMode,
           // inherit these settings from previous state
@@ -112,9 +124,9 @@ onMounted(() => {
         inst.value.updateTabs(
           props.tabs
             ? {
-                tabs: props.tabs,
-                activeId: activeTab,
-              }
+              tabs: props.tabs,
+              activeId: activeTab,
+            }
             : { tabs: [], activeId: undefined },
         );
       } else if (activeTab !== oldActiveTab) {

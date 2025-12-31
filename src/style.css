@@ -6,5 +6,5 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-    --header-height: 0px;
+  --header-height: 0px;
 }
