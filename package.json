@@ -1,11 +1,22 @@
 {
   "name": "oi-code-editor",
-  "private": true,
   "version": "0.0.0",
   "type": "module",
+  "files": ["dist", "README.md"],
+  "exports": {
+    ".": {
+      "types": "./dist/types/components/index.d.ts",
+      "import": "./dist/oi-code-editor.es.js",
+      "require": "./dist/oi-code-editor.cjs.js"
+    }
+  },
+  "main": "dist/oi-code-editor.cjs.js",
+  "module": "dist/oi-code-editor.es.js",
+  "types": "dist/types/components/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "build:lib": "vue-tsc -b && vite build --config vite.config.lib.ts",
     "preview": "vite preview"
   },
   "dependencies": {

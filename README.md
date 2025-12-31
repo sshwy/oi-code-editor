@@ -1,5 +1,28 @@
-# Vue 3 + TypeScript + Vite
+# oi-code-editor
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+`oi-code-editor` is a Vue 3 component library that currently exports the `HelloWorld` component as a named export. The project doubles as a documentation site through the existing Vite app, so the sample page in `src/App.vue` can be used to preview and test the component in a real app shell.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Development
+
+- `pnpm dev` starts the Vite dev server and renders `src/App.vue`, which imports the component from `src/components/HelloWorld.vue`.
+- `src/main.ts` bootstraps the documentation page and is intentionally separate from the library entry so the demo can stay synced with the published component.
+
+## Building
+
+- `pnpm build` runs `vue-tsc` and builds the documentation site (`vite build` with the default config).
+- `pnpm build:lib` runs the same type check plus `vite build --config vite.config.lib.ts` to emit the library bundles from `src/components/index.ts`.
+
+The generated artifacts are placed in `dist`, with the library exposing the ESM and CJS bundles plus declaration files under `dist/types`.
+
+## Usage
+
+```ts
+import { createApp } from 'vue'
+import { HelloWorld } from 'oi-code-editor'
+
+createApp({
+  template: '<HelloWorld msg=\"hello\" />',
+}).mount('#app')
+```
+
+The library only exposes `HelloWorld` as a named export (no default export), and the `msg` prop is required.
