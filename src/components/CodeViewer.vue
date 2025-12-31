@@ -15,6 +15,7 @@ const props = defineProps<{
   noTabs?: boolean;
   noStatusPanel?: boolean;
   lineWrap?: boolean;
+  colorMode?: 'light' | 'dark';
 }>();
 
 const activeId = defineModel<string | undefined>();
@@ -53,6 +54,7 @@ const tabs = computed(() =>
     :active-tab="safeActiveId"
     :no-status-panel="noStatusPanel"
     :line-wrap="lineWrap"
+    :color-mode="colorMode"
     @update:active-tab="activeId = $event"
   />
 </template>
