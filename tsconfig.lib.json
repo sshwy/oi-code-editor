@@ -9,6 +9,6 @@
     "outDir": "dist/types",
     "skipLibCheck": true
   },
-  "include": ["src/components/**/*.ts", "src/components/**/*.vue"]
+  "include": ["src/components/**/*.ts", "src/lib/**/*.ts", "src/components/**/*.vue"]
 }
 

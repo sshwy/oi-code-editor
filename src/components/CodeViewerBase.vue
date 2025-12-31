@@ -117,7 +117,7 @@ onMounted(() => {
 <template>
   <div
     ref="editorRoot"
-    class="code-viewer-base shadow-xs ring-1 ring-accented"
+    class="code-viewer-base"
   />
 </template>
 
