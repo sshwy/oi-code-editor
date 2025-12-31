@@ -4,3 +4,7 @@
 @import "tailwindcss/utilities.css" layer(utilities);
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    --header-height: 0px;
+}

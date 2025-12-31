@@ -82,6 +82,7 @@ export interface StateInitOptions extends ConfigOptions {
 }
 
 export interface InitOptions extends StateInitOptions {
+  tabClassList?: string[];
   // whether the editor is readonly
   readonly?: boolean;
   // callback when the editor state changes
@@ -334,7 +335,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         };
         init.onUpdate?.(info);
       }
-      destroy() {}
+      destroy() { }
     },
   );
 
@@ -409,6 +410,7 @@ export function useEditorView(el: Element, init: InitOptions) {
   };
 
   const onClickTab = init.onClickTab;
+  const commonTabClassList = init.tabClassList || []
   const tabsBar = (view: EditorView): Panel => {
     const dom = document.createElement("div");
     dom.classList.add("flex", "overflow-x-auto", "text-[13px]");
@@ -434,16 +436,6 @@ export function useEditorView(el: Element, init: InitOptions) {
       }
       el.textContent = label;
     };
-    const commonTabClassList = [
-      "px-3",
-      "py-1",
-      "cursor-pointer",
-      "hover:bg-white/50",
-      "dark:hover:bg-white/6",
-      "border-r-1",
-      "border-default",
-      "text-nowrap",
-    ];
     const createChildren = (items: TabItem[], activeId?: string) =>
       items.map((item) => {
         const tabEl = document.createElement("div");

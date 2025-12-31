@@ -25,6 +25,18 @@ const editorRoot = useTemplateRef("editorRoot");
 
 const inst = ref<EditorInstance>();
 
+const commonTabClassList = [
+  "px-3",
+  "py-1",
+  "cursor-pointer",
+  "hover:bg-white/50",
+  "dark:hover:bg-white/6",
+  "border-r-1",
+  "border-slate-300",
+  "dark:border-slate-700",
+  "text-nowrap",
+];
+
 onMounted(() => {
   if (!editorRoot.value) return;
   inst.value = useEditorView(editorRoot.value, {
@@ -35,6 +47,7 @@ onMounted(() => {
     lang: props.lang,
     showStatusPanel: !props.noStatusPanel,
     lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
+    tabClassList: commonTabClassList,
     tabs: props.tabs
       ? {
           tabs: props.tabs,
@@ -115,10 +128,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    ref="editorRoot"
-    class="code-viewer-base"
-  />
+  <div ref="editorRoot" class="code-viewer-base" />
 </template>
 
 <style>
