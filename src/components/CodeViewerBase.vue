@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem } from '~/lib/useEditorView';
+import { useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem } from '~/lib/editor-view';
 
 const props = defineProps<{
   content: string;

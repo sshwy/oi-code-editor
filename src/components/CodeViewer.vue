@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { FoldOptions, LangKind } from '~/lib/useEditorView';
+import type { FoldOptions, LangKind } from '~/lib/editor-view';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 const props = defineProps<{

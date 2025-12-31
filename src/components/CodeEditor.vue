@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { LangKind } from '~/lib/useEditorView';
+import type { LangKind } from '~/lib/editor-view';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 defineProps<{
