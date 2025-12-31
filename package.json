@@ -6,17 +6,17 @@
   "exports": {
     ".": {
       "types": "./dist/types/components/index.d.ts",
-      "import": "./dist/oi-code-editor.es.js",
-      "require": "./dist/oi-code-editor.cjs.js"
+      "import": "./dist/oi-code-editor.js",
+      "require": "./dist/oi-code-editor.umd.cjs"
     }
   },
-  "main": "dist/oi-code-editor.cjs.js",
-  "module": "dist/oi-code-editor.es.js",
+  "main": "dist/oi-code-editor.umd.cjs",
+  "module": "dist/oi-code-editor.js",
   "types": "dist/types/components/index.d.ts",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "build:lib": "vue-tsc -b && vite build --config vite.config.lib.ts",
+    "build": "vue-tsc -b && vite build --outDir docs-dist",
+    "build:lib": "vite build --config vite.config.lib.ts && vue-tsc -b",
     "preview": "vite preview"
   },
   "dependencies": {
