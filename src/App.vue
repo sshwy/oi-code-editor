@@ -55,6 +55,12 @@ const code = ref(euclideanoidText)
         :items="items"
         class="border border-slate-300 dark:border-slate-700"
         :color-mode="presentColor"
+        :initial-fold="{
+          comment: true,
+          preprocessor: true,
+          using: true,
+          typedef: true,
+        }"
       />
     </div>
   </div>

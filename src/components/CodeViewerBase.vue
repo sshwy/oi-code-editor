@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { useEditorView, type EditorInstance, type InitOptions, type LangKind, type TabItem } from '~/lib/useEditorView';
+import { useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem } from '~/lib/useEditorView';
 
 const props = defineProps<{
   content: string;
@@ -8,6 +8,7 @@ const props = defineProps<{
   lang?: LangKind;
   editable?: boolean;
   initialLineWrap?: boolean;
+  initialFold?: FoldOptions;
   // undefined means hide the tab bar
   tabs?: TabItem[];
   noStatusPanel?: boolean;
@@ -68,7 +69,7 @@ const options: InitOptions = {
     const names = {
       simple_mode: "简单模式",
       vim_mode: "Vim 模式",
-      line_nowrap:"不自动换行",
+      line_nowrap: "不自动换行",
       line_wrap: "自动换行",
       num_characters: "字符",
     }
@@ -79,6 +80,7 @@ const options: InitOptions = {
 onMounted(() => {
   if (!editorRoot.value) return;
   inst.value = useEditorView(editorRoot.value, options);
+  inst.value.fold(props.initialFold);
 
   // to make the new props and old props different, we need to destruct the props
   // in the getter function
@@ -87,6 +89,7 @@ onMounted(() => {
     ([props, activeTab], [old, oldActiveTab]) => {
       if (!inst.value) return;
 
+      // update editor state from props if the editor is readonly
       // If the editor is editable, the content can only be updated by the user.
       if (props.content !== old.content && !props.editable) {
         inst.value.setState({
@@ -105,6 +108,7 @@ onMounted(() => {
           lineWrap: inst.value.lineWrap,
           editMode: inst.value.editMode,
         });
+        inst.value.fold(props.initialFold);
         return;
       }
 

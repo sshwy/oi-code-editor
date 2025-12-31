@@ -20,7 +20,7 @@ import {
   insertBlankLine,
 } from "@codemirror/commands";
 import { vim, Vim } from "@replit/codemirror-vim";
-import type { LanguageSupport } from "@codemirror/language";
+import { foldGutter } from "@codemirror/language";
 import {
   defaultHighlightStyle,
   syntaxHighlighting,
@@ -34,6 +34,17 @@ import { cpp } from "@codemirror/lang-cpp";
 import { rust } from "@codemirror/lang-rust";
 import { markdown } from "@codemirror/lang-markdown";
 import { json } from "@codemirror/lang-json";
+import {
+  collectFolds,
+  commentFold,
+  commentFoldService,
+  clangPreprocessorFold,
+  clangPreprocessorFoldService,
+  clangTypedefFold,
+  clangTypedefFoldService,
+  clangUsingFold,
+  clangUsingFoldService,
+} from "./fold-services";
 
 // Syntax highlighting supported by the code editor
 export type LangKind = "cpp" | "markdown" | "rust" | "text" | "json";
@@ -96,6 +107,13 @@ export interface ViewUpdateInfo {
   update: ViewUpdate;
 }
 
+export interface FoldOptions {
+  comment?: boolean;
+  preprocessor?: boolean;
+  using?: boolean;
+  typedef?: boolean;
+}
+
 const themeMap = {
   light: githubLight,
   dark: oneDark,
@@ -117,7 +135,6 @@ const rustSupp = rust();
 const jsonSupp = json();
 const markdownSupp = markdown({
   codeLanguages(info) {
-    console.log(info);
     if (["cpp", "c", "cxx"].includes(info)) {
       return cppSupp.language;
     }
@@ -130,8 +147,8 @@ const markdownSupp = markdown({
     return null;
   },
 });
-const langSuppMap: Record<LangKind, LanguageSupport | []> = {
-  cpp: cppSupp,
+const langSuppMap: Record<LangKind, Extension> = {
+  cpp: [cppSupp, clangPreprocessorFoldService, clangUsingFoldService, clangTypedefFoldService],
   rust: rustSupp,
   text: [],
   markdown: markdownSupp,
@@ -266,6 +283,8 @@ export function useEditorView(el: Element, init: InitOptions) {
   const staticExtensions = {
     common: [
       lineNumbers({}),
+      foldGutter(),
+      commentFoldService,
       gutter({ class: "cm-gutters" }),
       bracketMatching(),
       drawSelection({}),
@@ -550,6 +569,17 @@ export function useEditorView(el: Element, init: InitOptions) {
     updateTabs(tabs: Partial<TabsState>) {
       view.dispatch({
         effects: updateTabsState.of(tabs),
+      });
+    },
+    fold(options?: FoldOptions) {
+      const state = view.state;
+      view.dispatch({
+        effects: [
+          ...(options?.comment ? collectFolds(state, commentFold) : []),
+          ...(options?.preprocessor ? collectFolds(state, clangPreprocessorFold) : []),
+          ...(options?.using ? collectFolds(state, clangUsingFold) : []),
+          ...(options?.typedef ? collectFolds(state, clangTypedefFold) : []),
+        ],
       });
     },
   };

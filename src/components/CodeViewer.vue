@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { LangKind } from '~/lib/useEditorView';
+import type { FoldOptions, LangKind } from '~/lib/useEditorView';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 const props = defineProps<{
@@ -15,6 +15,7 @@ const props = defineProps<{
   noTabs?: boolean;
   noStatusPanel?: boolean;
   lineWrap?: boolean;
+  initialFold?: FoldOptions;
   colorMode?: 'light' | 'dark';
 }>();
 
@@ -56,5 +57,6 @@ const tabs = computed(() =>
     :line-wrap="lineWrap"
     :color-mode="colorMode"
     @update:active-tab="activeId = $event"
+    :initial-fold
   />
 </template>
