@@ -37,8 +37,8 @@ const code = ref(euclideanoidText)
       <h1 class="text-2xl font-medium my-4">Sshwy's OI Code Editor</h1>
 
       <p>
-        OICodeEditor contains a set of code viewing or editing components based on codemirror6
-        and Vue3, supporting multi-file, syntax highlighting and theme switching.
+        OICodeEditor contains a set of code viewing or editing components based on codemirror6 and
+        Vue3, supporting multi-file, syntax highlighting and theme switching.
       </p>
 
       <p>Simple code editor demo:</p>
