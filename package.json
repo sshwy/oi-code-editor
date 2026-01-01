@@ -1,6 +1,7 @@
 {
   "name": "@sshwy/oi-code-editor",
   "version": "0.1.0",
+  "homepage": "https://sshwy.github.io/oi-code-editor/",
   "repository": {
     "type": "git",
     "url": "https://github.com/sshwy/oi-code-editor.git"
