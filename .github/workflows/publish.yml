@@ -35,6 +35,6 @@ jobs:
         run: pnpm build:lib
 
       - name: Publish to npm
-        run: pnpm publish --publish-branch=release --provenance --access public
+        run: pnpm publish --publish-branch=release --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
