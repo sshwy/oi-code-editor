@@ -1,14 +1,15 @@
 # oi-code-editor
 
-`oi-code-editor` is a showcase plus component suite centered around the `CodeViewer` component. The demo (`src/App.vue`) renders `CodeViewer` with a trio of code snippets (`dmst.cpp`, `head.h`, `rating.rs`) loaded via the `?raw` loader, and it keeps the viewer in sync with the current theme by binding VueUse's `useColorMode` to the component's `colorMode` prop.
+`oi-code-editor` is a showcase plus component suite centered around the `CodeViewer` and `CodeEditor` components. The `CodeEditor` exposes a Codemirror-based editing surface with theme-aware color mode binding and language presets, while the `CodeViewer` renders tabbed code samples with syntax highlighting, configurable folding, and optional status panels, keeping everything in sync with the parent theme via `colorMode`.
 
 ## App demo
 
 The documentation app (`src/App.vue`) does the following:
 
-1. Imports `CodeViewer` from `~/components` along with raw text assets for each sample file.
-2. Tracks the current color mode via `useColorMode` and computes a `'light'` or `'dark'` value to pass down as `:color-mode="presentColor"`.
-3. Passes an `items` array (id, label, content, lang) to `CodeViewer`, which renders the files in a tabbed code view with syntax highlighting and status controls.
+1. Imports `CodeEditor`/`CodeViewer` from `~/components` plus the raw text assets for each sample file and the editor fixture.
+2. Tracks the current color mode via `useColorMode`, forces it into `'auto'`, and computes a `'light'` or `'dark'` value to pass down as `:color-mode="presentColor"` so both components stay theme aligned.
+3. Binds `CodeEditor` to a reactive `code` ref seeded with `euclideanoid.cpp`, giving an editable C++ sandbox.
+4. Passes an `items` array (id, label, content, lang) to `CodeViewer`, which renders the files in a tabbed view with syntax highlighting, status controls, and the `initial-fold` settings that collapse comments, preprocessors, `using`, and `typedef`.
 
 Running `pnpm dev` launches this demo so you can preview how `CodeViewer` behaves with real code samples and theme transitions.
 
