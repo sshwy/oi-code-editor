@@ -9,7 +9,7 @@ const props = defineProps<{
     label: string;
     content: string;
     lang?: LangKind;
-    compareContent?: string;
+    comparedContent?: string;
     tabClassList?: string[];
   }[];
   noTabs?: boolean;
@@ -32,7 +32,7 @@ const activeItem = computed(
       id: "_empty",
       content: "<empty>",
       lang: undefined,
-      compareContent: undefined,
+      comparedContent: undefined,
     },
 );
 
@@ -53,7 +53,7 @@ const tabs = computed(() =>
     @update:active-tab="activeId = $event"
     :content="activeItem.content"
     :lang="activeItem.lang"
-    :compared-content="activeItem.compareContent"
+    :compared-content="activeItem.comparedContent"
     :tabs="tabs"
     :no-status-panel
     :line-wrap

@@ -32,7 +32,7 @@ const items = [{
   id: '4',
   label: 'fwt (diff)',
   content: fwtAndText,
-  compareContent: fwtOrText,
+  comparedContent: fwtOrText,
   lang: 'cpp' as const,
 }]
 
