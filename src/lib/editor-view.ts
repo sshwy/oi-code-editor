@@ -216,14 +216,17 @@ export function useEditorView(el: Element, init: InitOptions) {
   const WatchUpdate = ViewPlugin.fromClass(
     class {
       update(update: ViewUpdate) {
-        const info: ViewUpdateInfo = {
-          colorMode: colorModes.read(update.state),
-          editMode: editModes.read(update.state),
-          lineWrap: lineWraps.read(update.state),
-          lang: langSupports.read(update.state),
-          update,
-        };
-        init.onUpdate?.(info);
+        const f = init.onUpdate;
+        if (f) {
+          const info: ViewUpdateInfo = {
+            colorMode: colorModes.read(update.state),
+            editMode: editModes.read(update.state),
+            lineWrap: lineWraps.read(update.state),
+            lang: langSupports.read(update.state),
+            update,
+          };
+          f(info);
+        }
       }
       destroy() {}
     },
