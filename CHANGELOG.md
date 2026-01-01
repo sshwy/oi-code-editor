@@ -1,3 +1,20 @@
+## [0.2.1] - 2026-01-01
+
+### 🚜 Refactor
+
+- Streamline editor-view setup by extracting common extensions into a new file
+- Rename compareContent to comparedContent for consistency in CodeViewer and App components
+
+### 📚 Documentation
+
+- Add CHANGELOG.md
+
+### ⚙️ Miscellaneous Tasks
+
+- Add code compare example
+- Remove unused VSCode extensions configuration
+- Update dependencies and improve theme imports in package.json and editor-view.ts
+
 ## [0.2.0] - 2026-01-01
 
 ### 🚀 Features
