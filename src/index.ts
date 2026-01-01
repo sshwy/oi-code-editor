@@ -1,2 +1,2 @@
-export * from "~/lib/editor-view";
+export * from "~/lib";
 export * from "~/components";
