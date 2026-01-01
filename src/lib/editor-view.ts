@@ -4,7 +4,7 @@ import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 import { vim, Vim } from "@replit/codemirror-vim";
 import { oneDark } from "@codemirror/theme-one-dark";
-import { githubLight } from "@uiw/codemirror-themes-all";
+import { githubLight } from "@uiw/codemirror-theme-github";
 
 import {
   collectFolds,
