@@ -1,5 +1,4 @@
-import { EditorState, Compartment, StateField, StateEffect, Facet } from "@codemirror/state";
-import type { Extension, StateEffectType } from "@codemirror/state";
+import { EditorState, Compartment } from "@codemirror/state";
 import {
   EditorView,
   keymap,
@@ -30,27 +29,18 @@ import {
 import { oneDark } from "@codemirror/theme-one-dark";
 import { githubLight } from "@uiw/codemirror-themes-all";
 
-import { cpp } from "@codemirror/lang-cpp";
-import { rust } from "@codemirror/lang-rust";
-import { markdown } from "@codemirror/lang-markdown";
-import { json } from "@codemirror/lang-json";
 import {
   collectFolds,
   commentFold,
   commentFoldService,
   clangPreprocessorFold,
-  clangPreprocessorFoldService,
   clangTypedefFold,
-  clangTypedefFoldService,
   clangUsingFold,
-  clangUsingFoldService,
-  clangMultiLineDefineFoldService,
   clangMultiLineDefineFold,
 } from "./fold-services";
 import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
-
-// Syntax highlighting supported by the code editor
-export type LangKind = "cpp" | "markdown" | "rust" | "text" | "json";
+import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
+import { ExtMap } from "./extension-map";
 
 export interface ConfigOptions {
   // syntax highlighting language
@@ -118,42 +108,6 @@ const lineWrapMap = {
   nowrap: [],
 };
 
-const cppSupp = cpp();
-const rustSupp = rust();
-const jsonSupp = json();
-const markdownSupp = markdown({
-  codeLanguages(info) {
-    if (["cpp", "c", "cxx"].includes(info)) {
-      return cppSupp.language;
-    }
-    if (["rust", "rs"].includes(info)) {
-      return rustSupp.language;
-    }
-    if (["json"].includes(info)) {
-      return jsonSupp.language;
-    }
-    return null;
-  },
-});
-const langSuppMap: Record<LangKind, Extension> = {
-  cpp: [
-    cppSupp,
-    clangPreprocessorFoldService,
-    clangUsingFoldService,
-    clangTypedefFoldService,
-    clangMultiLineDefineFoldService,
-  ],
-  rust: rustSupp,
-  text: [],
-  markdown: markdownSupp,
-  json: jsonSupp,
-};
-
-const supportedLanguages: LangKind[] = Object.keys(langSuppMap) as LangKind[];
-export function isSupportedLanguage(lang: any): lang is LangKind {
-  return supportedLanguages.includes(lang as LangKind);
-}
-
 function createMergeView(content: string) {
   return unifiedMergeView({
     original: content,
@@ -191,59 +145,9 @@ function createBottomPanelItem(
   };
 }
 
-class ExtMap<T extends Record<string, Extension>> {
-  private extensions: T;
-  private facet: Facet<keyof T, keyof T | undefined>;
-  private setKey: StateEffectType<keyof T>;
-  private compartment: Compartment;
-
-  constructor(extensions: T) {
-    this.extensions = extensions;
-    this.facet = Facet.define({
-      combine(value) {
-        return value[0];
-      },
-    });
-    this.setKey = StateEffect.define<keyof T>();
-    this.compartment = new Compartment();
-  }
-
-  of(key: keyof T): Extension {
-    const initExt = this.extensions[key];
-    if (!initExt) {
-      throw new Error(`Extension key ${String(key)} not found`);
-    }
-    const field = StateField.define<keyof T>({
-      create() {
-        return key;
-      },
-      update: (value, tr) => {
-        for (const e of tr.effects) {
-          if (e.is(this.setKey)) {
-            value = e.value;
-          }
-        }
-        return value;
-      },
-      provide: (field) => this.facet.from(field),
-    });
-
-    return [field, this.compartment.of(initExt)];
-  }
-
-  reconfigure(key: keyof T) {
-    return [this.compartment.reconfigure(this.extensions[key] || []), this.setKey.of(key)];
-  }
-
-  read(state: EditorState) {
-    return state.facet(this.facet);
-  }
-}
-
 const colorModes = new ExtMap(themeMap);
 const editModes = new ExtMap(editModeMap);
 const lineWraps = new ExtMap(lineWrapMap);
-const langSupports = new ExtMap(langSuppMap);
 
 const mergeViewCompart = new Compartment();
 
@@ -524,7 +428,7 @@ export function useEditorView(el: Element, init: InitOptions) {
       return langSupports.read(view.state);
     },
     set lang(lang: LangKind | undefined) {
-      if (lang && lang in langSuppMap) {
+      if (isSupportedLanguage(lang)) {
         view.dispatch({
           effects: langSupports.reconfigure(lang),
         });
