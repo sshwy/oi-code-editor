@@ -27,7 +27,7 @@
 - Rename package to @sshwy/oi-code-editor and update publish command in workflow
 - Add homepage URL to package.json
 - Add license information and include LICENSE file in package.json
-- *(version)* Bump to 0.2.0
+- _(version)_ Bump to 0.2.0
 
 ## [0.1.0] - 2026-01-01
 
@@ -59,7 +59,7 @@
 - Update package configuration and enhance type definitions
 - Update library entry point and restructure exports in components
 - Format code
-- *(ci)* Update GitHub Actions workflow to install Node.js version 25 and adjust pnpm setup
+- _(ci)_ Update GitHub Actions workflow to install Node.js version 25 and adjust pnpm setup
 - Update Vite configuration base path and format pnpm cache setting in GitHub Actions workflow
 - Add .gitattributes file to mark assets as vendored
 - Add GitHub Actions workflow for publishing NPM library on release branch

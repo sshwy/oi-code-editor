@@ -4,6 +4,8 @@ import dmstText from '~/assets/dmst.cpp?raw';
 import headText from '~/assets/head.h?raw'
 import ratingText from '~/assets/rating.rs?raw'
 import euclideanoidText from '~/assets/euclideanoid.cpp?raw'
+import fwtAndText from '~/assets/fwt_and.cpp?raw'
+import fwtOrText from '~/assets/fwt_or.cpp?raw'
 import { useColorMode } from '@vueuse/core'
 import { computed, ref } from 'vue';
 
@@ -26,6 +28,12 @@ const items = [{
   label: 'rating.rs',
   content: ratingText,
   lang: 'rust' as const,
+}, {
+  id: '4',
+  label: 'fwt (diff)',
+  content: fwtAndText,
+  compareContent: fwtOrText,
+  lang: 'cpp' as const,
 }]
 
 const code = ref(euclideanoidText)
