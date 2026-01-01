@@ -41,6 +41,7 @@ import {
 import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
 import { ExtMap } from "./extension-map";
+import { i18nFacet, tr, type I18nPrases } from "./i18n";
 
 export interface ConfigOptions {
   // syntax highlighting language
@@ -62,6 +63,8 @@ export interface StateInitOptions extends ConfigOptions {
   tabs?: TabsState;
   // whether to show the status panel
   showStatusPanel?: boolean;
+  // initial i18n phrases
+  i18nPhrases?: I18nPrases;
 }
 
 export interface InitOptions extends StateInitOptions {
@@ -73,8 +76,6 @@ export interface InitOptions extends StateInitOptions {
   onClickTab?: (item: TabItem) => void;
   // callback when the panel is mounted
   onBottomPanelMount?: (this: Panel) => void;
-  // function to translate messages
-  translate?: (msg: string) => string;
 }
 
 export interface ViewUpdateInfo {
@@ -153,8 +154,6 @@ const mergeViewCompart = new Compartment();
 
 // Create a code editor view on the given element and items.
 export function useEditorView(el: Element, init: InitOptions) {
-  const t = init.translate || ((msg) => msg);
-
   const staticExtensions = {
     common: [
       lineNumbers({}),
@@ -237,13 +236,16 @@ export function useEditorView(el: Element, init: InitOptions) {
     dom.classList.add("flex", "gap-1", "text-[12px]");
 
     const charCount = createBottomPanelItem(view, function (view) {
-      this.textContent = view.state.doc.length + " " + t("num_characters");
+      this.textContent = view.state.doc.length + " " + tr(view.state, "characters");
     });
 
     const vimStatus = createBottomPanelItem(
       view,
       function (view) {
-        this.textContent = editModes.read(view.state) === "vim" ? t("vim_mode") : t("simple_mode");
+        this.textContent =
+          editModes.read(view.state) === "vim"
+            ? tr(view.state, "vim_mode")
+            : tr(view.state, "simple_mode");
       },
       {
         click: function (view) {
@@ -258,7 +260,9 @@ export function useEditorView(el: Element, init: InitOptions) {
       view,
       function (view) {
         this.textContent =
-          lineWraps.read(view.state) === "wrap" ? t("line_wrap") : t("line_nowrap");
+          lineWraps.read(view.state) === "wrap"
+            ? tr(view.state, "line_wrap")
+            : tr(view.state, "line_nowrap");
       },
       {
         click: function (view) {
@@ -380,6 +384,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         extraExt,
         init.showStatusPanel !== false ? showPanel.of(bottomPanel) : [],
         init.tabs ? [tabsField(init.tabs), showPanel.of(tabsBar)] : [],
+        init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
       ],
     });
     return startState;

@@ -61,6 +61,13 @@ const code = ref(euclideanoidText)
         v-model="code"
         :color-mode="presentColor"
         lang="cpp"
+        :i18n-phrases="{
+          characters: '字符',
+          line_nowrap: '不自动换行',
+          line_wrap: '自动换行',
+          simple_mode: '简单模式',
+          vim_mode: 'Vim 模式',
+        }"
       />
 
       <p>Static code viewing demo:</p>

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { LangKind } from '~/lib';
+import type { I18nPrases, LangKind } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 defineProps<{
   lang?: LangKind;
-  compareContent?: string;
+  comparedContent?: string;
   colorMode?: 'light' | 'dark';
+  i18nPhrases?: I18nPrases;
 }>();
 
 const content = defineModel<string>({ required: true });
@@ -14,9 +15,10 @@ const content = defineModel<string>({ required: true });
 <template>
   <CodeViewerBase
     v-model:content="content"
-    :lang="lang"
-    :compared-content="compareContent"
-    :color-mode="colorMode"
+    :lang
+    :compared-content
+    :color-mode
     editable
+    :i18n-phrases
   />
 </template>

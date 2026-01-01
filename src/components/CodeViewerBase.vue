@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem } from '~/lib';
+import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem } from '~/lib';
 
 const props = defineProps<{
   content: string;
@@ -13,6 +13,7 @@ const props = defineProps<{
   tabs?: TabItem[];
   noStatusPanel?: boolean;
   colorMode?: "light" | "dark";
+  i18nPhrases?: I18nPrases;
 }>();
 
 const emit = defineEmits<{
@@ -47,6 +48,7 @@ const options: InitOptions = {
   showStatusPanel: !props.noStatusPanel,
   lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
   tabClassList: commonTabClassList,
+  i18nPhrases: props.i18nPhrases,
   tabs: props.tabs
     ? {
       tabs: props.tabs,
@@ -64,16 +66,6 @@ const options: InitOptions = {
   onUpdate(info) {
     const content = info.update.state.doc.toString();
     emit("update:content", content);
-  },
-  translate(msg) {
-    const names = {
-      simple_mode: "简单模式",
-      vim_mode: "Vim 模式",
-      line_nowrap: "不自动换行",
-      line_wrap: "自动换行",
-      num_characters: "字符",
-    }
-    return names[msg as keyof typeof names] || msg;
   },
 }
 
@@ -104,6 +96,7 @@ onMounted(() => {
             }
             : undefined,
           color: props.colorMode,
+          i18nPhrases: props.i18nPhrases,
           // inherit these settings from previous state
           lineWrap: inst.value.lineWrap,
           editMode: inst.value.editMode,

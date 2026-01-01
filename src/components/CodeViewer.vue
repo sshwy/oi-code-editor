@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { FoldOptions, LangKind } from '~/lib';
+import type { FoldOptions, I18nPrases, LangKind } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 const props = defineProps<{
@@ -17,6 +17,7 @@ const props = defineProps<{
   lineWrap?: boolean;
   initialFold?: FoldOptions;
   colorMode?: 'light' | 'dark';
+  i18nPhrases?: I18nPrases;
 }>();
 
 const activeId = defineModel<string | undefined>();
@@ -48,15 +49,16 @@ const tabs = computed(() =>
 
 <template>
   <CodeViewerBase
+    :active-tab="safeActiveId"
+    @update:active-tab="activeId = $event"
     :content="activeItem.content"
     :lang="activeItem.lang"
     :compared-content="activeItem.compareContent"
     :tabs="tabs"
-    :active-tab="safeActiveId"
-    :no-status-panel="noStatusPanel"
-    :line-wrap="lineWrap"
-    :color-mode="colorMode"
-    @update:active-tab="activeId = $event"
+    :no-status-panel
+    :line-wrap
+    :color-mode
     :initial-fold
+    :i18n-phrases
   />
 </template>
