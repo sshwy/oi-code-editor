@@ -36,6 +36,19 @@ const code = ref(euclideanoidText)
     <div class="max-w-3xl px-4 mx-auto space-y-4">
       <h1 class="text-2xl font-medium my-4">Sshwy's OI Code Editor</h1>
 
+      <p class="flex gap-2">
+        <a href="https://github.com/sshwy/oi-code-editor" target="_blank" class="hover:underline"
+          >[repo]</a
+        >
+
+        <a
+          href="https://www.npmjs.com/package/@sshwy/oi-code-editor"
+          target="_blank"
+          class="hover:underline"
+          >[package]</a
+        >
+      </p>
+
       <p>
         OICodeEditor contains a set of code viewing or editing components based on codemirror6 and
         Vue3, supporting multi-file, syntax highlighting and theme switching.
