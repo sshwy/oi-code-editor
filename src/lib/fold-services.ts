@@ -61,7 +61,7 @@ export const commentFold = (state: EditorState, lineStart: number) => {
 
 export const commentFoldService = foldService.of(commentFold);
 
-export const regexFoldFactory = (pattern: RegExp) => {
+const regexFoldFactory = (pattern: RegExp) => {
   return (state: EditorState, lineStart: number) => {
     const doc = state.doc;
     const line = doc.lineAt(lineStart);
@@ -94,7 +94,7 @@ export const regexFoldFactory = (pattern: RegExp) => {
   };
 };
 
-export const clangPreprocessorFold = regexFoldFactory(/^#define|^#include/);
+export const clangPreprocessorFold = regexFoldFactory(/^#define|^#include|^#pragma/);
 export const clangPreprocessorFoldService = foldService.of(clangPreprocessorFold);
 
 export const clangUsingFold = regexFoldFactory(/^using/);
@@ -102,6 +102,30 @@ export const clangUsingFoldService = foldService.of(clangUsingFold);
 
 export const clangTypedefFold = regexFoldFactory(/^typedef/);
 export const clangTypedefFoldService = foldService.of(clangTypedefFold);
+
+export const clangMultiLineDefineFold = (state: EditorState, lineStart: number) => {
+  const doc = state.doc;
+  const line = doc.lineAt(lineStart);
+  if (line.text.trim().match(/^#define/)) {
+    let from = line.to;
+    let to = line.to;
+
+    let lineNo = line.number;
+    while (lineNo <= doc.lines) {
+      const l = doc.line(lineNo);
+      to = l.to;
+      if (!l.text.trim().match(/\\$/)) break;
+      lineNo++;
+    }
+
+    if (lineNo > line.number) {
+      return { from, to };
+    }
+  }
+
+  return null;
+};
+export const clangMultiLineDefineFoldService = foldService.of(clangMultiLineDefineFold);
 
 export function collectFolds(
   state: EditorState,

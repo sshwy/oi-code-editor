@@ -44,6 +44,8 @@ import {
   clangTypedefFoldService,
   clangUsingFold,
   clangUsingFoldService,
+  clangMultiLineDefineFoldService,
+  clangMultiLineDefineFold,
 } from "./fold-services";
 
 // Syntax highlighting supported by the code editor
@@ -148,7 +150,13 @@ const markdownSupp = markdown({
   },
 });
 const langSuppMap: Record<LangKind, Extension> = {
-  cpp: [cppSupp, clangPreprocessorFoldService, clangUsingFoldService, clangTypedefFoldService],
+  cpp: [
+    cppSupp,
+    clangPreprocessorFoldService,
+    clangUsingFoldService,
+    clangTypedefFoldService,
+    clangMultiLineDefineFoldService,
+  ],
   rust: rustSupp,
   text: [],
   markdown: markdownSupp,
@@ -590,6 +598,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         effects: [
           ...(options?.comment ? collectFolds(state, commentFold) : []),
           ...(options?.preprocessor ? collectFolds(state, clangPreprocessorFold) : []),
+          ...(options?.preprocessor ? collectFolds(state, clangMultiLineDefineFold) : []),
           ...(options?.using ? collectFolds(state, clangUsingFold) : []),
           ...(options?.typedef ? collectFolds(state, clangTypedefFold) : []),
         ],
