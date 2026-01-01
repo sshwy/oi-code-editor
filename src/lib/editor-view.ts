@@ -1,38 +1,14 @@
 import { EditorState, Compartment } from "@codemirror/state";
-import {
-  EditorView,
-  keymap,
-  lineNumbers,
-  gutter,
-  drawSelection,
-  rectangularSelection,
-  showPanel,
-  ViewPlugin,
-} from "@codemirror/view";
+import { EditorView, showPanel, ViewPlugin } from "@codemirror/view";
 import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
-import {
-  defaultKeymap,
-  history,
-  historyKeymap,
-  indentWithTab,
-  insertBlankLine,
-} from "@codemirror/commands";
 import { vim, Vim } from "@replit/codemirror-vim";
-import { foldGutter } from "@codemirror/language";
-import {
-  defaultHighlightStyle,
-  syntaxHighlighting,
-  bracketMatching,
-  indentOnInput,
-} from "@codemirror/language";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { githubLight } from "@uiw/codemirror-themes-all";
 
 import {
   collectFolds,
   commentFold,
-  commentFoldService,
   clangPreprocessorFold,
   clangTypedefFold,
   clangUsingFold,
@@ -42,6 +18,7 @@ import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } f
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
 import { ExtMap } from "./extension-map";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
+import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 
 export interface ConfigOptions {
   // syntax highlighting language
@@ -67,15 +44,19 @@ export interface StateInitOptions extends ConfigOptions {
   i18nPhrases?: I18nPrases;
 }
 
-export interface InitOptions extends StateInitOptions {
-  tabClassList?: string[];
-  // whether the editor is readonly
-  readonly?: boolean;
+export interface EventHandlerSet {
   // callback when the editor state changes
   onUpdate?: (info: ViewUpdateInfo) => void;
+  // callback when the tab is clicked
   onClickTab?: (item: TabItem) => void;
   // callback when the panel is mounted
   onBottomPanelMount?: (this: Panel) => void;
+}
+
+export interface InitOptions extends StateInitOptions, EventHandlerSet {
+  tabClassList?: string[];
+  // whether the editor is readonly
+  readonly?: boolean;
 }
 
 export interface ViewUpdateInfo {
@@ -125,8 +106,14 @@ function createBottomPanelItem(
   },
 ) {
   const el = document.createElement("div");
-  el.style.padding = "2px 4px";
-  el.classList.add("hover:bg-black/5", "cursor-pointer", "select-none", "dark:hover:bg-white/10");
+  el.classList.add(
+    "px-1",
+    "py-0.5",
+    "hover:bg-black/5",
+    "cursor-pointer",
+    "select-none",
+    "dark:hover:bg-white/10",
+  );
 
   // initialization
   renderer.call(el, view);
@@ -154,55 +141,8 @@ const mergeViewCompart = new Compartment();
 
 // Create a code editor view on the given element and items.
 export function useEditorView(el: Element, init: InitOptions) {
-  const staticExtensions = {
-    common: [
-      lineNumbers({}),
-      foldGutter({
-        markerDOM(open) {
-          const div = document.createElement("div");
-          if (!open) {
-            div.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>';
-          } else {
-            div.innerHTML =
-              '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>';
-          }
-          div.className = "flex items-center justify-center h-full";
-          return div;
-        },
-      }),
-      commentFoldService,
-      gutter({ class: "cm-gutters" }),
-      bracketMatching(),
-      drawSelection({}),
-      rectangularSelection(),
-      syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-    ],
-    // extensions for readonly mode
-    readonly: [
-      EditorState.readOnly.of(true),
-      EditorView.editable.of(false),
-      EditorView.contentAttributes.of({ tabindex: "0" }),
-      // shortcuts like ctrl-a/c/v are allowed
-      keymap.of(defaultKeymap),
-    ],
-    edit: [
-      history({ minDepth: 100, newGroupDelay: 100 }),
-      indentOnInput(),
-      keymap.of([
-        ...defaultKeymap,
-        ...historyKeymap,
-        indentWithTab,
-        {
-          key: "Shift-Enter",
-          run: insertBlankLine,
-        },
-      ]),
-    ],
-  };
-
   const baseExt = (init: ConfigOptions) => [
-    staticExtensions.common,
+    basicSetup,
     colorModes.of(init.color || "light"),
     // make sure vim is included before other keymaps
     editModes.of(init.editMode || "simple"),
@@ -232,7 +172,7 @@ export function useEditorView(el: Element, init: InitOptions) {
     },
   );
 
-  const extraExt = init.readonly ? staticExtensions.readonly : [staticExtensions.edit, WatchUpdate];
+  const extraExt = init.readonly ? viewerSetup : [editorSetup, WatchUpdate];
 
   const bottomPanel = (view: EditorView): Panel => {
     const dom = document.createElement("div");
