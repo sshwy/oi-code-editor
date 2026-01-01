@@ -47,24 +47,10 @@ import {
   clangMultiLineDefineFoldService,
   clangMultiLineDefineFold,
 } from "./fold-services";
+import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
 
 // Syntax highlighting supported by the code editor
 export type LangKind = "cpp" | "markdown" | "rust" | "text" | "json";
-
-export interface TabItem {
-  // unique identifier for the tab
-  id: string;
-  // tab label (title)
-  label: string;
-  classList?: string[];
-}
-
-export interface TabsState {
-  // non-empty list of tabs
-  tabs: TabItem[];
-  // undefined means hide the tab bar
-  activeId?: string;
-}
 
 export interface ConfigOptions {
   // syntax highlighting language
@@ -260,29 +246,6 @@ const lineWraps = new ExtMap(lineWrapMap);
 const langSupports = new ExtMap(langSuppMap);
 
 const mergeViewCompart = new Compartment();
-
-// tabs extension
-const updateTabsState = StateEffect.define<Partial<TabsState>>();
-const tabsFacet = Facet.define<TabsState, TabsState | undefined>({
-  combine(value) {
-    return value[0];
-  },
-});
-const tabsField = (init: TabsState) =>
-  StateField.define<TabsState>({
-    create() {
-      return init;
-    },
-    update(value, tr) {
-      for (const e of tr.effects) {
-        if (e.is(updateTabsState)) {
-          value = { ...value, ...e.value };
-        }
-      }
-      return value;
-    },
-    provide: (field) => tabsFacet.from(field),
-  });
 
 // Create a code editor view on the given element and items.
 export function useEditorView(el: Element, init: InitOptions) {
