@@ -9,7 +9,7 @@ defineProps<{
   i18nPhrases?: I18nPrases;
 }>();
 
-const content = defineModel<string>({ required: true });
+const content = defineModel<string | undefined>({ required: true });
 const editMode = defineModel<EditMode>('editMode');
 </script>
 

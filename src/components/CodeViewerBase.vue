@@ -3,7 +3,7 @@ import { onMounted, ref, useTemplateRef, watch } from 'vue';
 import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem, type EditMode, type ColorMode } from '~/lib';
 
 const props = defineProps<{
-  content: string;
+  content?: string;
   editMode?: EditMode;
   comparedContent?: string;
   lang?: LangKind;
@@ -44,7 +44,7 @@ const commonTabClassList = [
 const options: InitOptions = {
   readonly: !props.editable,
   color: props.colorMode || 'light',
-  content: props.content,
+  content: props.content || '',
   editMode: props.editMode,
   comparedContent: props.comparedContent,
   lang: props.lang,
@@ -91,7 +91,7 @@ onMounted(() => {
       // If the editor is editable, the content can only be updated by the user.
       if (props.content !== old.content && !props.editable) {
         inst.value.setState({
-          content: props.content,
+          content: props.content || '',
           comparedContent: props.comparedContent,
           lang: props.lang,
           showStatusPanel: !props.noStatusPanel,
