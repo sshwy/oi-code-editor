@@ -1,3 +1,14 @@
+## [0.3.1] - 2026-01-02
+
+### 🐛 Bug Fixes
+
+- Fix props type of components
+- Make content optional
+
+### ⚙️ Miscellaneous Tasks
+
+- Add .cursor to .gitignore
+
 ## [0.3.0] - 2026-01-02
 
 ### 🚀 Features
@@ -19,6 +30,7 @@
 - Update type definitions and include paths in package.json and tsconfig.lib.json
 - Reorganize dependencies in package.json and pnpm-lock.yaml, and add CodeMirror globals in vite.config.lib.ts
 - Sync edit mode in demo page
+- _(version)_ Bump to 0.3.0
 
 ## [0.2.1] - 2026-01-01
 
