@@ -67,8 +67,10 @@ const options: InitOptions = {
     emit("bottomPanelMount", pannelWrapper);
   },
   onUpdate(info) {
-    const content = info.update.state.doc.toString();
-    emit("update:content", content);
+    if (!info.update.state.doc.eq(info.update.startState.doc)) {
+      const content = info.update.state.doc.toString();
+      emit("update:content", content);
+    }
     if (info.editMode && props.editMode !== info.editMode) {
       emit("update:editMode", info.editMode);
     }
