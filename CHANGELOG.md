@@ -1,3 +1,13 @@
+## [0.3.2] - 2026-01-02
+
+### 🐛 Bug Fixes
+
+- Prevent unnecessary content updates in CodeViewerBase
+
+### ⚙️ Miscellaneous Tasks
+
+- Add git-cliff configuration for changelog generation
+
 ## [0.3.1] - 2026-01-02
 
 ### 🐛 Bug Fixes
@@ -30,7 +40,6 @@
 - Update type definitions and include paths in package.json and tsconfig.lib.json
 - Reorganize dependencies in package.json and pnpm-lock.yaml, and add CodeMirror globals in vite.config.lib.ts
 - Sync edit mode in demo page
-- _(version)_ Bump to 0.3.0
 
 ## [0.2.1] - 2026-01-01
 
@@ -48,7 +57,6 @@
 - Add code compare example
 - Remove unused VSCode extensions configuration
 - Update dependencies and improve theme imports in package.json and editor-view.ts
-- _(version)_ Bump to 0.2.1
 
 ## [0.2.0] - 2026-01-01
 
@@ -79,7 +87,6 @@
 - Rename package to @sshwy/oi-code-editor and update publish command in workflow
 - Add homepage URL to package.json
 - Add license information and include LICENSE file in package.json
-- _(version)_ Bump to 0.2.0
 
 ## [0.1.0] - 2026-01-01
 
