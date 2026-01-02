@@ -8,6 +8,7 @@ import fwtAndText from '~/assets/fwt_and.cpp?raw'
 import fwtOrText from '~/assets/fwt_or.cpp?raw'
 import { useColorMode } from '@vueuse/core'
 import { computed, ref } from 'vue';
+import type { EditMode } from '~/lib';
 
 const color = useColorMode()
 color.value = 'auto'
@@ -37,6 +38,7 @@ const items = [{
 }]
 
 const code = ref(euclideanoidText)
+const editMode = ref<EditMode>()
 </script>
 
 <template>
@@ -67,6 +69,7 @@ const code = ref(euclideanoidText)
       <CodeEditor
         class="border border-slate-300 dark:border-slate-700"
         v-model="code"
+        v-model:editMode="editMode"
         :color-mode="presentColor"
         lang="cpp"
         :i18n-phrases="{
@@ -81,6 +84,7 @@ const code = ref(euclideanoidText)
       <p>Static code viewing demo:</p>
 
       <CodeViewer
+        v-model:editMode="editMode"
         :items="items"
         class="border border-slate-300 dark:border-slate-700"
         :color-mode="presentColor"
