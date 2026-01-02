@@ -1,3 +1,25 @@
+## [0.3.0] - 2026-01-02
+
+### 🚀 Features
+
+- Introduce edit mode functionality in CodeEditor and CodeViewer
+
+### 🐛 Bug Fixes
+
+- Fix import path in output type declaration
+
+### 🚜 Refactor
+
+- Update import paths to use relative paths in index.ts and lib/index.ts
+- Put color mode support to separated file
+
+### ⚙️ Miscellaneous Tasks
+
+- Update pnpm-lock.yaml
+- Update type definitions and include paths in package.json and tsconfig.lib.json
+- Reorganize dependencies in package.json and pnpm-lock.yaml, and add CodeMirror globals in vite.config.lib.ts
+- Sync edit mode in demo page
+
 ## [0.2.1] - 2026-01-01
 
 ### 🚜 Refactor
@@ -14,6 +36,7 @@
 - Add code compare example
 - Remove unused VSCode extensions configuration
 - Update dependencies and improve theme imports in package.json and editor-view.ts
+- _(version)_ Bump to 0.2.1
 
 ## [0.2.0] - 2026-01-01
 
