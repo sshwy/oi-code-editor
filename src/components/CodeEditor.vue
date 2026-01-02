@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { I18nPrases, LangKind } from '~/lib';
+import type { I18nPrases, LangKind, EditMode } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 defineProps<{
@@ -10,11 +10,13 @@ defineProps<{
 }>();
 
 const content = defineModel<string>({ required: true });
+const editMode = defineModel<EditMode>('editMode');
 </script>
 
 <template>
   <CodeViewerBase
     v-model:content="content"
+    v-model:editMode="editMode"
     :lang
     :compared-content
     :color-mode

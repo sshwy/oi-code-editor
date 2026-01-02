@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { FoldOptions, I18nPrases, LangKind } from '~/lib';
+import type { EditMode, FoldOptions, I18nPrases, LangKind } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 const props = defineProps<{
@@ -19,6 +19,8 @@ const props = defineProps<{
   colorMode?: 'light' | 'dark';
   i18nPhrases?: I18nPrases;
 }>();
+
+const editMode = defineModel<EditMode>('editMode');
 
 const activeId = defineModel<string | undefined>();
 const safeActiveId = computed<string | undefined>(() => {
@@ -49,6 +51,7 @@ const tabs = computed(() =>
 
 <template>
   <CodeViewerBase
+    v-model:editMode="editMode"
     :active-tab="safeActiveId"
     @update:active-tab="activeId = $event"
     :content="activeItem.content"

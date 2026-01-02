@@ -2,7 +2,6 @@ import { EditorState, Compartment } from "@codemirror/state";
 import { EditorView, showPanel, ViewPlugin } from "@codemirror/view";
 import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
-import { vim, Vim } from "@replit/codemirror-vim";
 import { oneDark } from "@codemirror/theme-one-dark";
 import { githubLight } from "@uiw/codemirror-theme-github";
 
@@ -19,12 +18,13 @@ import { isSupportedLanguage, langSupports, type LangKind } from "./language-sup
 import { ExtMap } from "./extension-map";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
 import { basicSetup, editorSetup, viewerSetup } from "./extensions";
+import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
 
 export interface ConfigOptions {
   // syntax highlighting language
   lang?: LangKind;
   // whether to enable vim mode
-  editMode?: keyof typeof editModeMap;
+  editMode?: EditMode;
   // whether to wrap the lines
   lineWrap?: keyof typeof lineWrapMap;
   // color theme
@@ -60,7 +60,7 @@ export interface InitOptions extends StateInitOptions, EventHandlerSet {
 }
 
 export interface ViewUpdateInfo {
-  editMode?: keyof typeof editModeMap;
+  editMode?: EditMode;
   colorMode?: keyof typeof themeMap;
   lineWrap?: keyof typeof lineWrapMap;
   lang: LangKind | undefined;
@@ -77,12 +77,6 @@ export interface FoldOptions {
 const themeMap = {
   light: githubLight,
   dark: oneDark,
-};
-
-Vim.map("jj", "<Esc>", "insert"); // in insert mode
-const editModeMap = {
-  vim: vim(),
-  simple: [],
 };
 
 const lineWrapMap = {
@@ -134,7 +128,6 @@ function createBottomPanelItem(
 }
 
 const colorModes = new ExtMap(themeMap);
-const editModes = new ExtMap(editModeMap);
 const lineWraps = new ExtMap(lineWrapMap);
 
 const mergeViewCompart = new Compartment();
@@ -363,8 +356,8 @@ export function useEditorView(el: Element, init: InitOptions) {
     get editMode() {
       return editModes.read(view.state);
     },
-    set editMode(editMode: keyof typeof editModeMap | undefined) {
-      if (editMode && editMode in editModeMap) {
+    set editMode(editMode: EditMode | undefined) {
+      if (isSupportedEditMode(editMode)) {
         view.dispatch({
           effects: editModes.reconfigure(editMode),
         });

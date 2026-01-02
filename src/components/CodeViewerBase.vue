@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem } from '~/lib';
+import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem, type EditMode } from '~/lib';
 
 const props = defineProps<{
   content: string;
+  editMode?: EditMode;
   comparedContent?: string;
   lang?: LangKind;
   editable?: boolean;
@@ -18,6 +19,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   "update:content": [content: string];
+  "update:editMode": [editMode: EditMode];
   "bottomPanelMount": [el: HTMLElement]
 }>();
 
@@ -43,6 +45,7 @@ const options: InitOptions = {
   readonly: !props.editable,
   color: props.colorMode || 'light',
   content: props.content,
+  editMode: props.editMode,
   comparedContent: props.comparedContent,
   lang: props.lang,
   showStatusPanel: !props.noStatusPanel,
@@ -66,6 +69,9 @@ const options: InitOptions = {
   onUpdate(info) {
     const content = info.update.state.doc.toString();
     emit("update:content", content);
+    if (info.editMode && props.editMode !== info.editMode) {
+      emit("update:editMode", info.editMode);
+    }
   },
 }
 
@@ -115,6 +121,10 @@ onMounted(() => {
 
       if (props.lang !== old.lang) {
         inst.value.lang = props.lang;
+      }
+
+      if (props.editMode && props.editMode !== old.editMode) {
+        inst.value.editMode = props.editMode;
       }
 
       if (props.tabs !== old.tabs) {
