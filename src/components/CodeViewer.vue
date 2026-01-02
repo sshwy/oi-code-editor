@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { EditMode, FoldOptions, I18nPrases, LangKind } from '~/lib';
+import type { ColorMode, EditMode, FoldOptions, I18nPrases, LangKind } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 const props = defineProps<{
@@ -16,7 +16,7 @@ const props = defineProps<{
   noStatusPanel?: boolean;
   lineWrap?: boolean;
   initialFold?: FoldOptions;
-  colorMode?: 'light' | 'dark';
+  colorMode?: ColorMode;
   i18nPhrases?: I18nPrases;
 }>();
 

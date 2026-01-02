@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem, type EditMode } from '~/lib';
+import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem, type EditMode, type ColorMode } from '~/lib';
 
 const props = defineProps<{
   content: string;
@@ -13,7 +13,7 @@ const props = defineProps<{
   // undefined means hide the tab bar
   tabs?: TabItem[];
   noStatusPanel?: boolean;
-  colorMode?: "light" | "dark";
+  colorMode?: ColorMode;
   i18nPhrases?: I18nPrases;
 }>();
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { I18nPrases, LangKind, EditMode } from '~/lib';
+import type { I18nPrases, LangKind, EditMode, ColorMode } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 defineProps<{
   lang?: LangKind;
   comparedContent?: string;
-  colorMode?: 'light' | 'dark';
+  colorMode?: ColorMode;
   i18nPhrases?: I18nPrases;
 }>();
 

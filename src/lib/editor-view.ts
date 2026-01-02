@@ -2,8 +2,6 @@ import { EditorState, Compartment } from "@codemirror/state";
 import { EditorView, showPanel, ViewPlugin } from "@codemirror/view";
 import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
-import { oneDark } from "@codemirror/theme-one-dark";
-import { githubLight } from "@uiw/codemirror-theme-github";
 
 import {
   collectFolds,
@@ -19,6 +17,7 @@ import { ExtMap } from "./extension-map";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
 import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
+import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
 
 export interface ConfigOptions {
   // syntax highlighting language
@@ -28,7 +27,7 @@ export interface ConfigOptions {
   // whether to wrap the lines
   lineWrap?: keyof typeof lineWrapMap;
   // color theme
-  color?: keyof typeof themeMap;
+  color?: ColorMode;
   // content of the compared source
   comparedContent?: string;
 }
@@ -61,7 +60,7 @@ export interface InitOptions extends StateInitOptions, EventHandlerSet {
 
 export interface ViewUpdateInfo {
   editMode?: EditMode;
-  colorMode?: keyof typeof themeMap;
+  colorMode?: ColorMode;
   lineWrap?: keyof typeof lineWrapMap;
   lang: LangKind | undefined;
   update: ViewUpdate;
@@ -73,11 +72,6 @@ export interface FoldOptions {
   using?: boolean;
   typedef?: boolean;
 }
-
-const themeMap = {
-  light: githubLight,
-  dark: oneDark,
-};
 
 const lineWrapMap = {
   wrap: EditorView.lineWrapping,
@@ -127,7 +121,6 @@ function createBottomPanelItem(
   };
 }
 
-const colorModes = new ExtMap(themeMap);
 const lineWraps = new ExtMap(lineWrapMap);
 
 const mergeViewCompart = new Compartment();
@@ -341,8 +334,8 @@ export function useEditorView(el: Element, init: InitOptions) {
     get colorMode() {
       return colorModes.read(view.state);
     },
-    set colorMode(color: keyof typeof themeMap | undefined) {
-      if (color && color in themeMap) {
+    set colorMode(color: ColorMode | undefined) {
+      if (isSupportedColorMode(color)) {
         view.dispatch({
           effects: colorModes.reconfigure(color),
         });
