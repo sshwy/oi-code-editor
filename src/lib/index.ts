@@ -1,4 +1,4 @@
-export * from "~/lib/editor-view";
-export { type LangKind, isSupportedLanguage } from "~/lib/language-supports";
-export { type TabItem, type TabsState } from "~/lib/tabs";
-export { type I18nPrases } from "~/lib/i18n";
+export * from "./editor-view";
+export { type LangKind, isSupportedLanguage } from "./language-supports";
+export { type TabItem, type TabsState } from "./tabs";
+export { type I18nPrases } from "./i18n";
