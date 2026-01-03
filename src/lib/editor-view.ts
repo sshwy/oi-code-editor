@@ -13,11 +13,11 @@ import {
 } from "./fold-services";
 import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
-import { ExtensionMap } from "./extension-map";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
 import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
 import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
+import { wrapModes, type WrapMode } from "./wrap-mode";
 
 export interface ConfigOptions {
   // syntax highlighting language
@@ -25,7 +25,7 @@ export interface ConfigOptions {
   // whether to enable vim mode
   editMode?: EditMode;
   // whether to wrap the lines
-  lineWrap?: keyof typeof lineWrapMap;
+  lineWrap?: WrapMode;
   // color theme
   color?: ColorMode;
   // content of the compared source
@@ -61,7 +61,7 @@ export interface InitOptions extends StateInitOptions, EventHandlerSet {
 export interface ViewUpdateInfo {
   editMode?: EditMode;
   colorMode?: ColorMode;
-  lineWrap?: keyof typeof lineWrapMap;
+  lineWrap?: WrapMode;
   lang: LangKind | undefined;
   update: ViewUpdate;
 }
@@ -72,11 +72,6 @@ export interface FoldOptions {
   using?: boolean;
   typedef?: boolean;
 }
-
-const lineWrapMap = {
-  wrap: EditorView.lineWrapping,
-  nowrap: [],
-};
 
 function createMergeView(content: string) {
   return unifiedMergeView({
@@ -114,14 +109,12 @@ function createBottomPanelItem(
   };
 }
 
-const lineWraps = new ExtensionMap(lineWrapMap);
-
 const watchUpdate = (fn: (info: ViewUpdateInfo) => void) =>
   EditorView.updateListener.of((update: ViewUpdate) => {
     const info: ViewUpdateInfo = {
       colorMode: colorModes.read(update.state),
       editMode: editModes.read(update.state),
-      lineWrap: lineWraps.read(update.state),
+      lineWrap: wrapModes.read(update.state),
       lang: langSupports.read(update.state),
       update,
     };
@@ -174,15 +167,15 @@ const statusPanel =
       view,
       function (view) {
         this.textContent =
-          lineWraps.read(view.state) === "wrap"
+          wrapModes.read(view.state) === "wrap"
             ? tr(view.state, "line_wrap")
             : tr(view.state, "line_nowrap");
       },
       {
         click: function (view) {
           view.dispatch({
-            effects: lineWraps.reconfigure(
-              lineWraps.read(view.state) === "wrap" ? "nowrap" : "wrap",
+            effects: wrapModes.reconfigure(
+              wrapModes.read(view.state) === "wrap" ? "nowrap" : "wrap",
             ),
           });
         },
@@ -213,7 +206,7 @@ const baseExt = (init: ConfigOptions) => [
   colorModes.of(init.color || "light"),
   // make sure vim is included before other keymaps
   editModes.of(init.editMode || "simple"),
-  lineWraps.of(init.lineWrap || "nowrap"),
+  wrapModes.of(init.lineWrap || "nowrap"),
   mergeViewCompart.of(
     init.comparedContent === undefined ? [] : createMergeView(init.comparedContent),
   ),
@@ -350,7 +343,7 @@ export function useEditorView(el: Element, init: InitOptions) {
       }
     },
     get lineWrap() {
-      return lineWraps.read(view.state);
+      return wrapModes.read(view.state);
     },
     get editMode() {
       return editModes.read(view.state);
