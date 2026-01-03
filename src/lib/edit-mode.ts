@@ -1,5 +1,5 @@
 import { vim, Vim } from "@replit/codemirror-vim";
-import { ExtMap } from "./extension-map";
+import { ExtensionMap } from "./extension-map";
 
 Vim.map("jj", "<Esc>", "insert"); // in insert mode
 const editModeMap = {
@@ -13,4 +13,4 @@ export function isSupportedEditMode(mode: any): mode is EditMode {
 
 export type EditMode = keyof typeof editModeMap;
 
-export const editModes = new ExtMap(editModeMap);
+export const editModes = new ExtensionMap(editModeMap);

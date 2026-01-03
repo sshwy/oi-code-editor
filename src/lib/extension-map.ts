@@ -8,7 +8,7 @@ import {
   type StateEffectType,
 } from "@codemirror/state";
 
-export class ExtMap<T extends Record<string, Extension>> {
+export class ExtensionMap<T extends Record<string, Extension>> {
   private extensions: T;
   private facet: Facet<keyof T, keyof T | undefined>;
   private setKey: StateEffectType<keyof T>;

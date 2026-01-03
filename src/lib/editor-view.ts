@@ -13,7 +13,7 @@ import {
 } from "./fold-services";
 import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
-import { ExtMap } from "./extension-map";
+import { ExtensionMap } from "./extension-map";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
 import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
@@ -121,7 +121,7 @@ function createBottomPanelItem(
   };
 }
 
-const lineWraps = new ExtMap(lineWrapMap);
+const lineWraps = new ExtensionMap(lineWrapMap);
 
 const mergeViewCompart = new Compartment();
 

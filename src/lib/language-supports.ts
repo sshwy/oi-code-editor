@@ -9,7 +9,7 @@ import { rust } from "@codemirror/lang-rust";
 import { markdown } from "@codemirror/lang-markdown";
 import { json } from "@codemirror/lang-json";
 import type { Extension } from "@codemirror/state";
-import { ExtMap } from "./extension-map";
+import { ExtensionMap } from "./extension-map";
 
 // Syntax highlighting supported by the code editor
 export type LangKind = "cpp" | "markdown" | "rust" | "text" | "json";
@@ -51,4 +51,4 @@ export function isSupportedLanguage(lang: any): lang is LangKind {
   return supportedLanguages.includes(lang as LangKind);
 }
 
-export const langSupports = new ExtMap(langSuppMap);
+export const langSupports = new ExtensionMap(langSuppMap);
