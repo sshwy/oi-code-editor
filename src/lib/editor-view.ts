@@ -49,7 +49,7 @@ export interface EventHandlerSet {
   // callback when the tab is clicked
   onClickTab?: (item: TabItem) => void;
   // callback when the panel is mounted
-  onBottomPanelMount?: (this: Panel) => void;
+  onStatusPanelMount?: (this: Panel) => void;
 }
 
 export interface InitOptions extends StateInitOptions, EventHandlerSet {
@@ -145,27 +145,15 @@ const WatchUpdate = ViewPlugin.define<PluginValue, (info: ViewUpdateInfo) => voi
 
 const mergeViewCompart = new Compartment();
 
-// Create a code editor view on the given element and items.
-export function useEditorView(el: Element, init: InitOptions) {
-  const baseExt = (init: ConfigOptions) => [
-    basicSetup,
-    colorModes.of(init.color || "light"),
-    // make sure vim is included before other keymaps
-    editModes.of(init.editMode || "simple"),
-    lineWraps.of(init.lineWrap || "nowrap"),
-    mergeViewCompart.of(
-      init.comparedContent === undefined ? [] : createMergeView(init.comparedContent),
-    ),
-    langSupports.of(init.lang || "text"),
-  ];
+const statusPanelTheme = EditorView.baseTheme({
+  ".cm-status-panel": { display: "flex", fontSize: "12px", gap: "4px" },
+});
 
-  const extraExt = init.readonly
-    ? viewerSetup
-    : [editorSetup, init.onUpdate ? WatchUpdate.of(init.onUpdate) : []];
-
-  const bottomPanel = (view: EditorView): Panel => {
+const statusPanel =
+  (cb?: (this: Panel) => void) =>
+  (view: EditorView): Panel => {
     const dom = document.createElement("div");
-    dom.classList.add("flex", "gap-1", "text-[12px]");
+    dom.classList.add("cm-status-panel");
 
     const charCount = createBottomPanelItem(view, function (view) {
       this.textContent = view.state.doc.length + " " + tr(view.state, "characters");
@@ -221,10 +209,28 @@ export function useEditorView(el: Element, init: InitOptions) {
         });
       },
       mount() {
-        init.onBottomPanelMount?.call(this);
+        cb?.call(this);
       },
     };
   };
+
+const baseExt = (init: ConfigOptions) => [
+  basicSetup,
+  colorModes.of(init.color || "light"),
+  // make sure vim is included before other keymaps
+  editModes.of(init.editMode || "simple"),
+  lineWraps.of(init.lineWrap || "nowrap"),
+  mergeViewCompart.of(
+    init.comparedContent === undefined ? [] : createMergeView(init.comparedContent),
+  ),
+  langSupports.of(init.lang || "text"),
+];
+
+// Create a code editor view on the given element and items.
+export function useEditorView(el: Element, init: InitOptions) {
+  const extraExt = init.readonly
+    ? viewerSetup
+    : [editorSetup, init.onUpdate ? WatchUpdate.of(init.onUpdate) : []];
 
   const onClickTab = init.onClickTab;
   const commonTabClassList = init.tabClassList || [];
@@ -308,13 +314,16 @@ export function useEditorView(el: Element, init: InitOptions) {
     };
   };
 
+  const onStatusPanelMount = init.onStatusPanelMount;
   const createState = (init: StateInitOptions): EditorState => {
     const startState = EditorState.create({
       doc: init.content,
       extensions: [
         baseExt(init),
         extraExt,
-        init.showStatusPanel !== false ? showPanel.of(bottomPanel) : [],
+        init.showStatusPanel !== false
+          ? [statusPanelTheme, showPanel.of(statusPanel(onStatusPanelMount))]
+          : [],
         init.tabs ? [tabsField(init.tabs), showPanel.of(tabsBar)] : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
       ],

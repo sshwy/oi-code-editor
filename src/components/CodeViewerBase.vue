@@ -61,7 +61,7 @@ const options: InitOptions = {
   onClickTab(item) {
     activeTab.value = item.id;
   },
-  onBottomPanelMount() {
+  onStatusPanelMount() {
     const pannelWrapper = this.dom.parentElement;
     if (!pannelWrapper) return;
     emit("bottomPanelMount", pannelWrapper);
