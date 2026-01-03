@@ -7,6 +7,7 @@ const codemirrorGlobals = {
   "@codemirror/lang-cpp": "CodeMirrorLangCpp",
   "@codemirror/lang-json": "CodeMirrorLangJson",
   "@codemirror/lang-markdown": "CodeMirrorLangMarkdown",
+  "@codemirror/lang-python": "CodeMirrorLangPython",
   "@codemirror/lang-rust": "CodeMirrorLangRust",
   "@codemirror/language": "CodeMirrorLanguage",
   "@codemirror/merge": "CodeMirrorMerge",
