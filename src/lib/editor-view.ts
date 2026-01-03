@@ -3,14 +3,7 @@ import { EditorView, showPanel } from "@codemirror/view";
 import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
-import {
-  collectFolds,
-  commentFold,
-  clangPreprocessorFold,
-  clangTypedefFold,
-  clangUsingFold,
-  clangMultiLineDefineFold,
-} from "./fold-services";
+import { type FoldOptions, foldTrans } from "./fold-services";
 import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
@@ -64,13 +57,6 @@ export interface ViewUpdateInfo {
   lineWrap?: WrapMode;
   lang: LangKind | undefined;
   update: ViewUpdate;
-}
-
-export interface FoldOptions {
-  comment?: boolean;
-  preprocessor?: boolean;
-  using?: boolean;
-  typedef?: boolean;
 }
 
 function createMergeView(content: string) {
@@ -394,15 +380,17 @@ export function useEditorView(el: Element, init: InitOptions) {
     },
     fold(options?: FoldOptions) {
       const state = view.state;
-      view.dispatch({
-        effects: [
-          ...(options?.comment ? collectFolds(state, commentFold) : []),
-          ...(options?.preprocessor ? collectFolds(state, clangPreprocessorFold) : []),
-          ...(options?.preprocessor ? collectFolds(state, clangMultiLineDefineFold) : []),
-          ...(options?.using ? collectFolds(state, clangUsingFold) : []),
-          ...(options?.typedef ? collectFolds(state, clangTypedefFold) : []),
-        ],
-      });
+      view.dispatch(
+        foldTrans(
+          state,
+          options || {
+            comment: true,
+            preprocessor: true,
+            using: true,
+            typedef: true,
+          },
+        ),
+      );
     },
   };
 }

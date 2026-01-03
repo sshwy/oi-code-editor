@@ -1,5 +1,5 @@
 import { foldEffect, foldService } from "@codemirror/language";
-import type { EditorState } from "@codemirror/state";
+import type { EditorState, TransactionSpec } from "@codemirror/state";
 
 export const commentFold = (state: EditorState, lineStart: number) => {
   const doc = state.doc;
@@ -143,4 +143,24 @@ export function collectFolds(
   }
 
   return effects;
+}
+
+export interface FoldOptions {
+  comment?: boolean;
+  preprocessor?: boolean;
+  using?: boolean;
+  typedef?: boolean;
+}
+
+// create a fold transaction for the given options
+export function foldTrans(state: EditorState, options: FoldOptions): TransactionSpec {
+  return {
+    effects: [
+      ...(options.comment ? collectFolds(state, commentFold) : []),
+      ...(options.preprocessor ? collectFolds(state, clangPreprocessorFold) : []),
+      ...(options.preprocessor ? collectFolds(state, clangMultiLineDefineFold) : []),
+      ...(options.using ? collectFolds(state, clangUsingFold) : []),
+      ...(options.typedef ? collectFolds(state, clangTypedefFold) : []),
+    ],
+  };
 }
