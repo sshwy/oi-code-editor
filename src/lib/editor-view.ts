@@ -1,6 +1,6 @@
 import { EditorState, Compartment } from "@codemirror/state";
 import { EditorView, showPanel, ViewPlugin } from "@codemirror/view";
-import type { ViewUpdate, Panel } from "@codemirror/view";
+import type { ViewUpdate, Panel, PluginValue } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
 import {
@@ -123,6 +123,26 @@ function createBottomPanelItem(
 
 const lineWraps = new ExtensionMap(lineWrapMap);
 
+/* ViewPlugin to watch for updates in the EditorView and execute the provided
+callback with detailed update info. */
+const WatchUpdate = ViewPlugin.define<PluginValue, (info: ViewUpdateInfo) => void>(
+  (_view: EditorView, fn: (info: ViewUpdateInfo) => void) => {
+    return {
+      update(update: ViewUpdate) {
+        const info: ViewUpdateInfo = {
+          colorMode: colorModes.read(update.state),
+          editMode: editModes.read(update.state),
+          lineWrap: lineWraps.read(update.state),
+          lang: langSupports.read(update.state),
+          update,
+        };
+        fn(info);
+      },
+      destroy() {},
+    };
+  },
+);
+
 const mergeViewCompart = new Compartment();
 
 // Create a code editor view on the given element and items.
@@ -139,26 +159,9 @@ export function useEditorView(el: Element, init: InitOptions) {
     langSupports.of(init.lang || "text"),
   ];
 
-  const WatchUpdate = ViewPlugin.fromClass(
-    class {
-      update(update: ViewUpdate) {
-        const f = init.onUpdate;
-        if (f) {
-          const info: ViewUpdateInfo = {
-            colorMode: colorModes.read(update.state),
-            editMode: editModes.read(update.state),
-            lineWrap: lineWraps.read(update.state),
-            lang: langSupports.read(update.state),
-            update,
-          };
-          f(info);
-        }
-      }
-      destroy() {}
-    },
-  );
-
-  const extraExt = init.readonly ? viewerSetup : [editorSetup, WatchUpdate];
+  const extraExt = init.readonly
+    ? viewerSetup
+    : [editorSetup, init.onUpdate ? WatchUpdate.of(init.onUpdate) : []];
 
   const bottomPanel = (view: EditorView): Panel => {
     const dom = document.createElement("div");
