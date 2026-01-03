@@ -94,14 +94,7 @@ function createBottomPanelItem(
   },
 ) {
   const el = document.createElement("div");
-  el.classList.add(
-    "px-1",
-    "py-0.5",
-    "hover:bg-black/5",
-    "cursor-pointer",
-    "select-none",
-    "dark:hover:bg-white/10",
-  );
+  el.classList.add("cm-panel-item");
 
   // initialization
   renderer.call(el, view);
@@ -139,6 +132,15 @@ const mergeViewCompart = new Compartment();
 
 const statusPanelTheme = EditorView.baseTheme({
   ".cm-status-panel": { display: "flex", fontSize: "12px", gap: "4px" },
+  ".cm-status-panel > .cm-panel-item": {
+    padding: "2px 4px",
+    cursor: "pointer",
+    userSelect: "none",
+  },
+  // "hover:bg-black/5"
+  "&light .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#0000000d" },
+  // "dark:hover:bg-white/10"
+  "&dark .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff1a" },
 });
 
 const statusPanel =
