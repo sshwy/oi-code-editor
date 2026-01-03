@@ -1,6 +1,6 @@
 import { EditorState, Compartment } from "@codemirror/state";
-import { EditorView, showPanel, ViewPlugin } from "@codemirror/view";
-import type { ViewUpdate, Panel, PluginValue } from "@codemirror/view";
+import { EditorView, showPanel } from "@codemirror/view";
+import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
 import {
@@ -123,25 +123,17 @@ function createBottomPanelItem(
 
 const lineWraps = new ExtensionMap(lineWrapMap);
 
-/* ViewPlugin to watch for updates in the EditorView and execute the provided
-callback with detailed update info. */
-const WatchUpdate = ViewPlugin.define<PluginValue, (info: ViewUpdateInfo) => void>(
-  (_view: EditorView, fn: (info: ViewUpdateInfo) => void) => {
-    return {
-      update(update: ViewUpdate) {
-        const info: ViewUpdateInfo = {
-          colorMode: colorModes.read(update.state),
-          editMode: editModes.read(update.state),
-          lineWrap: lineWraps.read(update.state),
-          lang: langSupports.read(update.state),
-          update,
-        };
-        fn(info);
-      },
-      destroy() {},
+const watchUpdate = (fn: (info: ViewUpdateInfo) => void) =>
+  EditorView.updateListener.of((update: ViewUpdate) => {
+    const info: ViewUpdateInfo = {
+      colorMode: colorModes.read(update.state),
+      editMode: editModes.read(update.state),
+      lineWrap: lineWraps.read(update.state),
+      lang: langSupports.read(update.state),
+      update,
     };
-  },
-);
+    fn(info);
+  });
 
 const mergeViewCompart = new Compartment();
 
@@ -230,7 +222,7 @@ const baseExt = (init: ConfigOptions) => [
 export function useEditorView(el: Element, init: InitOptions) {
   const extraExt = init.readonly
     ? viewerSetup
-    : [editorSetup, init.onUpdate ? WatchUpdate.of(init.onUpdate) : []];
+    : [editorSetup, init.onUpdate ? watchUpdate(init.onUpdate) : []];
 
   const onClickTab = init.onClickTab;
   const commonTabClassList = init.tabClassList || [];
