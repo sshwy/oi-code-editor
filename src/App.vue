@@ -67,7 +67,6 @@ const editMode = ref<EditMode>()
       <p>Simple code editor demo:</p>
 
       <CodeEditor
-        class="border border-slate-300 dark:border-slate-700"
         v-model="code"
         v-model:editMode="editMode"
         :color-mode="presentColor"
@@ -93,7 +92,6 @@ const editMode = ref<EditMode>()
       <CodeViewer
         v-model:editMode="editMode"
         :items="items"
-        class="border border-slate-300 dark:border-slate-700"
         :color-mode="presentColor"
         :initial-fold="{
           comment: true,
