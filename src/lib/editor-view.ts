@@ -46,7 +46,6 @@ export interface EventHandlerSet {
 }
 
 export interface InitOptions extends StateInitOptions, EventHandlerSet {
-  tabClassList?: string[];
   // whether the editor is readonly
   readonly?: boolean;
 }
@@ -121,6 +120,28 @@ const statusPanelTheme = EditorView.baseTheme({
   "&light .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#0000000d" },
   // "dark:hover:bg-white/10"
   "&dark .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff1a" },
+});
+
+const tabsPanelTheme = EditorView.baseTheme({
+  ".cm-tabs-panel": { display: "flex", fontSize: "13px", overflowX: "auto" },
+  ".cm-tabs-panel > .cm-panel-item": {
+    padding: "4px 12px",
+    cursor: "pointer",
+    userSelect: "none",
+    textWrap: "nowrap",
+  },
+  "&light .cm-tabs-panel > .cm-panel-item": {
+    borderRight: "1px solid #ddd",
+  },
+  "&dark .cm-tabs-panel > .cm-panel-item": {
+    borderRight: "1px solid #333",
+  },
+  "&light .cm-tabs-panel > .cm-panel-item[data-active]": { backgroundColor: "#ffffffe6" },
+  "&dark .cm-tabs-panel > .cm-panel-item[data-active]": { backgroundColor: "#ffffff1a" },
+  // "hover:bg-black/5"
+  "&light .cm-tabs-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff80" },
+  // "dark:hover:bg-white/10"
+  "&dark .cm-tabs-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff0f" },
 });
 
 const statusPanel =
@@ -205,31 +226,29 @@ export function useEditorView(el: Element, init: InitOptions) {
     : [editorSetup, init.onUpdate ? watchUpdate(init.onUpdate) : []];
 
   const onClickTab = init.onClickTab;
-  const commonTabClassList = init.tabClassList || [];
   const tabsBar = (view: EditorView): Panel => {
     const dom = document.createElement("div");
-    dom.classList.add("flex", "overflow-x-auto", "text-[13px]");
+    dom.classList.add("cm-tabs-panel");
 
     const init = view.state.field(tabsField);
     if (!init) throw new Error("TabsField not initialized");
 
     const updateTabEl = (el: Element, label: string, active: boolean, classList: string[]) => {
-      const activeClassList = ["bg-white/90", "dark:bg-white/10", "text-highlighted"];
-      el.classList.value = "";
+      el.classList.value = "cm-panel-item";
       el.classList.add(...classList);
       if (active) {
-        el.classList.add(...activeClassList);
+        el.setAttribute("data-active", "");
+      } else {
+        el.removeAttribute("data-active");
       }
       el.textContent = label;
     };
     const createChildren = (items: TabItem[], activeId?: string) =>
       items.map((item) => {
         const tabEl = document.createElement("div");
+        tabEl.classList.add("cm-panel-item");
         tabEl.setAttribute("data-id", item.id);
-        updateTabEl(tabEl, item.label || item.id, item.id === activeId, [
-          ...commonTabClassList,
-          ...(item.classList || []),
-        ]);
+        updateTabEl(tabEl, item.label || item.id, item.id === activeId, item.classList || []);
 
         tabEl.addEventListener("click", () => {
           onClickTab?.(item);
@@ -248,10 +267,12 @@ export function useEditorView(el: Element, init: InitOptions) {
           const id = child.getAttribute("data-id");
           const item = state.tabs.find((tab) => tab.id === id);
           if (item) {
-            updateTabEl(child, item.label || item.id, item.id === state.activeId, [
-              ...commonTabClassList,
-              ...(item.classList || []),
-            ]);
+            updateTabEl(
+              child,
+              item.label || item.id,
+              item.id === state.activeId,
+              item.classList || [],
+            );
           }
         }
       } else {
@@ -296,7 +317,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         init.showStatusPanel !== false
           ? [statusPanelTheme, showPanel.of(statusPanel(onStatusPanelMount))]
           : [],
-        init.tabs ? [tabsField, showPanel.of(tabsBar)] : [],
+        init.tabs ? [tabsField, showPanel.of(tabsBar), tabsPanelTheme] : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
       ],
     });

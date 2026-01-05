@@ -29,18 +29,6 @@ const editorRoot = useTemplateRef("editorRoot");
 
 const inst = ref<EditorInstance>();
 
-const commonTabClassList = [
-  "px-3",
-  "py-1",
-  "cursor-pointer",
-  "hover:bg-white/50",
-  "dark:hover:bg-white/6",
-  "border-r-1",
-  "border-slate-300",
-  "dark:border-slate-700",
-  "text-nowrap",
-];
-
 const options: InitOptions = {
   readonly: !props.editable,
   color: props.colorMode || 'light',
@@ -50,7 +38,6 @@ const options: InitOptions = {
   lang: props.lang,
   showStatusPanel: !props.noStatusPanel,
   lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
-  tabClassList: commonTabClassList,
   i18nPhrases: props.i18nPhrases,
   tabs: props.tabs
     ? {
