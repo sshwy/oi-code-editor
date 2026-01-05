@@ -14,6 +14,18 @@ const baseTheme = EditorView.baseTheme({
   "&.cm-focused": {
     outline: "none",
   },
+  ".cm-panel.cm-panel-lint ul": {
+    fontSize: "13px",
+  },
+  "&dark .cm-panel.cm-panel-lint ul:focus [aria-selected]": {
+    backgroundColor: "#333945",
+    color: "white",
+  },
+  "&light .cm-panel.cm-panel-lint ul:focus [aria-selected]": {
+    backgroundColor: "#ddd",
+    color: "black",
+  },
+  "&dark .cm-panel.cm-panel-lint ul [aria-selected]": { backgroundColor: "#333945" },
 });
 
 const themeMap = {
