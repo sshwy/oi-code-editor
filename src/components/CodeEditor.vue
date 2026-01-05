@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { I18nPrases, LangKind, EditMode, ColorMode } from '~/lib';
+import type { I18nPrases, LangKind, EditMode, ColorMode, Extension } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 defineProps<{
@@ -8,6 +8,8 @@ defineProps<{
   colorMode?: ColorMode;
   i18nPhrases?: I18nPrases;
   noStatusPanel?: boolean;
+  /** additional editor extensions (not reactive) */
+  extraExtensions?: Extension;
 }>();
 
 const content = defineModel<string | undefined>({ required: true });
@@ -24,5 +26,6 @@ const editMode = defineModel<EditMode>('editMode');
     :no-status-panel
     editable
     :i18n-phrases
+    :extra-extensions
   />
 </template>

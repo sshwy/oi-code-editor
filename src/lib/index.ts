@@ -6,3 +6,4 @@ export { type EditMode } from "./edit-mode";
 export { type ColorMode } from "./color-mode";
 export { type WrapMode } from "./wrap-mode";
 export { type FoldOptions } from "./fold-services";
+export { type Extension } from "@codemirror/state";

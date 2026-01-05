@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { ColorMode, EditMode, FoldOptions, I18nPrases, LangKind } from '~/lib';
+import type { ColorMode, EditMode, Extension, FoldOptions, I18nPrases, LangKind } from '~/lib';
 import CodeViewerBase from './CodeViewerBase.vue';
 
 const props = defineProps<{
@@ -18,6 +18,8 @@ const props = defineProps<{
   initialFold?: FoldOptions;
   colorMode?: ColorMode;
   i18nPhrases?: I18nPrases;
+  /** additional editor extensions (not reactive) */
+  extraExtensions?: Extension;
 }>();
 
 const editMode = defineModel<EditMode>('editMode');
@@ -63,5 +65,6 @@ const tabs = computed(() =>
     :color-mode
     :initial-fold
     :i18n-phrases
+    :extra-extensions
   />
 </template>

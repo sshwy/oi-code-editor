@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem, type EditMode, type ColorMode } from '~/lib';
+import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem, type EditMode, type ColorMode, type Extension } from '~/lib';
 import TabsPanel from './TabsPanel.vue';
 
 const props = defineProps<{
@@ -8,6 +8,8 @@ const props = defineProps<{
   editMode?: EditMode;
   comparedContent?: string;
   lang?: LangKind;
+  /** additional editor extensions (not reactive) */
+  extraExtensions?: Extension;
   editable?: boolean;
   initialLineWrap?: boolean;
   initialFold?: FoldOptions;
@@ -39,6 +41,7 @@ const options: InitOptions = {
   lang: props.lang,
   showStatusPanel: !props.noStatusPanel,
   lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
+  extensions: props.extraExtensions,
   i18nPhrases: props.i18nPhrases,
   onStatusPanelMount() {
     const pannelWrapper = this.dom.parentElement;
@@ -77,6 +80,7 @@ onMounted(() => {
           lang: props.lang,
           showStatusPanel: !props.noStatusPanel,
           color: props.colorMode,
+          extensions: props.extraExtensions,
           i18nPhrases: props.i18nPhrases,
           // inherit these settings from previous state
           lineWrap: inst.value.lineWrap,

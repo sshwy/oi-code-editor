@@ -1,4 +1,4 @@
-import { EditorState, Compartment } from "@codemirror/state";
+import { EditorState, Compartment, type Extension } from "@codemirror/state";
 import { EditorView, showPanel } from "@codemirror/view";
 import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
@@ -23,6 +23,8 @@ export interface ConfigOptions {
   color?: ColorMode;
   // content of the compared source
   comparedContent?: string;
+  /** additional editor extensions */
+  extensions?: Extension;
 }
 
 export interface StateInitOptions extends ConfigOptions {
@@ -103,6 +105,7 @@ export function useEditorView(el: Element, init: InitOptions) {
           ? [statusPanelTheme, showPanel.of(statusPanel(onStatusPanelMount))]
           : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
+        init.extensions || [],
       ],
     });
 
