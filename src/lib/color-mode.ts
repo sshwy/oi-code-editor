@@ -7,6 +7,10 @@ const baseTheme = EditorView.baseTheme({
   "&light": {
     border: "1px solid #ddd",
   },
+  ".cm-scroller": {
+    fontSize: "13px",
+    fontFamily: "var(--oce-font-mono)",
+  },
   "&.cm-focused": {
     outline: "none",
   },

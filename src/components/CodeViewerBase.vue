@@ -124,7 +124,7 @@ onMounted(() => {
 <style>
 .code-viewer-tab-panel {
   position: sticky;
-  top: 0;
+  top: var(--oce-header-height);
   z-index: 10;
   display: flex;
   font-size: 13px;
@@ -162,14 +162,5 @@ onMounted(() => {
 .dark .code-viewer-tab-item-active {
   background-color: #282c34;
   color: #eee;
-}
-
-.code-viewer-base .cm-panels.cm-panels-top {
-  top: var(--header-height) !important;
-}
-
-.code-viewer-base .cm-scroller {
-  font-family: var(--font-mono) !important;
-  font-size: 13px;
 }
 </style>

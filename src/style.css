@@ -6,5 +6,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --header-height: 0px;
+  --oce-header-height: 0px;
+  --oce-font-mono: var(--font-mono);
 }
