@@ -4,7 +4,6 @@ import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
 import { type FoldOptions, foldTrans } from "./fold-services";
-import { tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
 import { basicSetup, editorSetup, viewerSetup } from "./extensions";
@@ -28,8 +27,6 @@ export interface ConfigOptions {
 export interface StateInitOptions extends ConfigOptions {
   // initial content of the source
   content: string;
-  // initial tabs state. undefined means no tabs bar at all
-  tabs?: TabsState;
   // whether to show the status panel
   showStatusPanel?: boolean;
   // initial i18n phrases
@@ -39,8 +36,6 @@ export interface StateInitOptions extends ConfigOptions {
 export interface EventHandlerSet {
   // callback when the editor state changes
   onUpdate?: (info: ViewUpdateInfo) => void;
-  // callback when the tab is clicked
-  onClickTab?: (item: TabItem) => void;
   // callback when the panel is mounted
   onStatusPanelMount?: (this: Panel) => void;
 }
@@ -120,28 +115,6 @@ const statusPanelTheme = EditorView.baseTheme({
   "&light .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#0000000d" },
   // "dark:hover:bg-white/10"
   "&dark .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff1a" },
-});
-
-const tabsPanelTheme = EditorView.baseTheme({
-  ".cm-tabs-panel": { display: "flex", fontSize: "13px", overflowX: "auto" },
-  ".cm-tabs-panel > .cm-panel-item": {
-    padding: "4px 12px",
-    cursor: "pointer",
-    userSelect: "none",
-    textWrap: "nowrap",
-  },
-  "&light .cm-tabs-panel > .cm-panel-item": {
-    borderRight: "1px solid #ddd",
-  },
-  "&dark .cm-tabs-panel > .cm-panel-item": {
-    borderRight: "1px solid #333",
-  },
-  "&light .cm-tabs-panel > .cm-panel-item[data-active]": { backgroundColor: "#ffffffe6" },
-  "&dark .cm-tabs-panel > .cm-panel-item[data-active]": { backgroundColor: "#ffffff1a" },
-  // "hover:bg-black/5"
-  "&light .cm-tabs-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff80" },
-  // "dark:hover:bg-white/10"
-  "&dark .cm-tabs-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff0f" },
 });
 
 const statusPanel =
@@ -225,88 +198,6 @@ export function useEditorView(el: Element, init: InitOptions) {
     ? viewerSetup
     : [editorSetup, init.onUpdate ? watchUpdate(init.onUpdate) : []];
 
-  const onClickTab = init.onClickTab;
-  const tabsBar = (view: EditorView): Panel => {
-    const dom = document.createElement("div");
-    dom.classList.add("cm-tabs-panel");
-
-    const init = view.state.field(tabsField);
-    if (!init) throw new Error("TabsField not initialized");
-
-    const updateTabEl = (el: Element, label: string, active: boolean, classList: string[]) => {
-      el.classList.value = "cm-panel-item";
-      el.classList.add(...classList);
-      if (active) {
-        el.setAttribute("data-active", "");
-      } else {
-        el.removeAttribute("data-active");
-      }
-      el.textContent = label;
-    };
-    const createChildren = (items: TabItem[], activeId?: string) =>
-      items.map((item) => {
-        const tabEl = document.createElement("div");
-        tabEl.classList.add("cm-panel-item");
-        tabEl.setAttribute("data-id", item.id);
-        updateTabEl(tabEl, item.label || item.id, item.id === activeId, item.classList || []);
-
-        tabEl.addEventListener("click", () => {
-          onClickTab?.(item);
-        });
-
-        return tabEl;
-      });
-
-    const render = (state: TabsState, old?: TabsState) => {
-      if (
-        old &&
-        state.tabs.length === old.tabs.length &&
-        state.tabs.every((tab, i) => tab.id === old.tabs[i]?.id)
-      ) {
-        for (const child of dom.children) {
-          const id = child.getAttribute("data-id");
-          const item = state.tabs.find((tab) => tab.id === id);
-          if (item) {
-            updateTabEl(
-              child,
-              item.label || item.id,
-              item.id === state.activeId,
-              item.classList || [],
-            );
-          }
-        }
-      } else {
-        console.log(
-          "replace tabs",
-          state.tabs.map((t) => t.id),
-          old?.tabs.map((t) => t.id),
-        );
-        dom.replaceChildren(...createChildren(state.tabs, state.activeId));
-      }
-      dom.style.display = state.activeId === undefined ? "none" : "flex";
-    };
-
-    render(init);
-
-    return {
-      dom,
-      top: true,
-      update: (update) => {
-        const cur = update.state.field(tabsField);
-        const old = update.startState.field(tabsField);
-        if (!cur || cur === old) {
-          return;
-        }
-        render(cur, old);
-      },
-      mount() {
-        const pannelWrapper = this.dom.parentElement;
-        if (!pannelWrapper) return;
-        pannelWrapper.style.zIndex = "10";
-      },
-    };
-  };
-
   const onStatusPanelMount = init.onStatusPanelMount;
   const createState = (init: StateInitOptions): EditorState => {
     let startState = EditorState.create({
@@ -317,17 +208,10 @@ export function useEditorView(el: Element, init: InitOptions) {
         init.showStatusPanel !== false
           ? [statusPanelTheme, showPanel.of(statusPanel(onStatusPanelMount))]
           : [],
-        init.tabs ? [tabsField, showPanel.of(tabsBar), tabsPanelTheme] : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
       ],
     });
 
-    if (init.tabs) {
-      const tr = startState.update({
-        effects: updateTabsState.of(init.tabs),
-      });
-      startState = tr.state;
-    }
     return startState;
   };
 
@@ -393,15 +277,6 @@ export function useEditorView(el: Element, init: InitOptions) {
     },
     setState(init: StateInitOptions) {
       view.setState(createState(init));
-    },
-    // get the tabs state
-    get tabs() {
-      return view.state.field(tabsField);
-    },
-    updateTabs(tabs: Partial<TabsState>) {
-      view.dispatch({
-        effects: updateTabsState.of(tabs),
-      });
     },
     fold(options?: FoldOptions) {
       const state = view.state;
