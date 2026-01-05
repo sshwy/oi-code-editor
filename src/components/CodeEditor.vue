@@ -7,6 +7,7 @@ defineProps<{
   comparedContent?: string;
   colorMode?: ColorMode;
   i18nPhrases?: I18nPrases;
+  noStatusPanel?: boolean;
 }>();
 
 const content = defineModel<string | undefined>({ required: true });
@@ -20,6 +21,7 @@ const editMode = defineModel<EditMode>('editMode');
     :lang
     :compared-content
     :color-mode
+    :no-status-panel
     editable
     :i18n-phrases
   />
