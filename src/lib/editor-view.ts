@@ -4,7 +4,7 @@ import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
 import { type FoldOptions, foldTrans } from "./fold-services";
-import { tabsFacet, tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
+import { tabsField, updateTabsState, type TabItem, type TabsState } from "./tabs";
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
 import { i18nFacet, tr, type I18nPrases } from "./i18n";
 import { basicSetup, editorSetup, viewerSetup } from "./extensions";
@@ -210,7 +210,7 @@ export function useEditorView(el: Element, init: InitOptions) {
     const dom = document.createElement("div");
     dom.classList.add("flex", "overflow-x-auto", "text-[13px]");
 
-    const init = view.state.facet(tabsFacet);
+    const init = view.state.field(tabsField);
     if (!init) throw new Error("TabsField not initialized");
 
     const updateTabEl = (el: Element, label: string, active: boolean, classList: string[]) => {
@@ -271,8 +271,8 @@ export function useEditorView(el: Element, init: InitOptions) {
       dom,
       top: true,
       update: (update) => {
-        const cur = update.state.facet(tabsFacet);
-        const old = update.startState.facet(tabsFacet);
+        const cur = update.state.field(tabsField);
+        const old = update.startState.field(tabsField);
         if (!cur || cur === old) {
           return;
         }
@@ -288,7 +288,7 @@ export function useEditorView(el: Element, init: InitOptions) {
 
   const onStatusPanelMount = init.onStatusPanelMount;
   const createState = (init: StateInitOptions): EditorState => {
-    const startState = EditorState.create({
+    let startState = EditorState.create({
       doc: init.content,
       extensions: [
         baseExt(init),
@@ -296,10 +296,17 @@ export function useEditorView(el: Element, init: InitOptions) {
         init.showStatusPanel !== false
           ? [statusPanelTheme, showPanel.of(statusPanel(onStatusPanelMount))]
           : [],
-        init.tabs ? [tabsField(init.tabs), showPanel.of(tabsBar)] : [],
+        init.tabs ? [tabsField, showPanel.of(tabsBar)] : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
       ],
     });
+
+    if (init.tabs) {
+      const tr = startState.update({
+        effects: updateTabsState.of(init.tabs),
+      });
+      startState = tr.state;
+    }
     return startState;
   };
 
@@ -368,7 +375,7 @@ export function useEditorView(el: Element, init: InitOptions) {
     },
     // get the tabs state
     get tabs() {
-      return view.state.facet(tabsFacet);
+      return view.state.field(tabsField);
     },
     updateTabs(tabs: Partial<TabsState>) {
       view.dispatch({

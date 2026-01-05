@@ -15,25 +15,26 @@ export interface TabsState {
   activeId?: string;
 }
 
-// tabs extension
+/** State effect to update (partially) the current TabsState */
 export const updateTabsState = StateEffect.define<Partial<TabsState>>();
-export const tabsFacet = Facet.define<TabsState, TabsState | undefined>({
+
+const tabsFacet = Facet.define<TabsState, TabsState | undefined>({
   combine(value) {
     return value[0];
   },
 });
-export const tabsField = (init: TabsState) =>
-  StateField.define<TabsState>({
-    create() {
-      return init;
-    },
-    update(value, tr) {
-      for (const e of tr.effects) {
-        if (e.is(updateTabsState)) {
-          value = { ...value, ...e.value };
-        }
+
+export const tabsField = StateField.define<TabsState>({
+  create() {
+    return { tabs: [], activeId: undefined };
+  },
+  update(value, tr) {
+    for (const e of tr.effects) {
+      if (e.is(updateTabsState)) {
+        value = { ...value, ...e.value };
       }
-      return value;
-    },
-    provide: (field) => tabsFacet.from(field),
-  });
+    }
+    return value;
+  },
+  provide: (field) => tabsFacet.from(field),
+});
