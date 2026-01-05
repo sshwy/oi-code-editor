@@ -59,7 +59,8 @@ export interface ViewUpdateInfo {
   update: ViewUpdate;
 }
 
-function createMergeView(content: string) {
+function createMergeView(content?: string) {
+  if (content === undefined) return [];
   return unifiedMergeView({
     original: content,
     mergeControls: false,
@@ -193,9 +194,7 @@ const baseExt = (init: ConfigOptions) => [
   // make sure vim is included before other keymaps
   editModes.of(init.editMode || "simple"),
   wrapModes.of(init.lineWrap || "nowrap"),
-  mergeViewCompart.of(
-    init.comparedContent === undefined ? [] : createMergeView(init.comparedContent),
-  ),
+  mergeViewCompart.of(createMergeView(init.comparedContent)),
   langSupports.of(init.lang || "text"),
 ];
 
@@ -361,9 +360,7 @@ export function useEditorView(el: Element, init: InitOptions) {
     },
     setOriginalDoc(content?: string) {
       view.dispatch({
-        effects: mergeViewCompart.reconfigure(
-          content === undefined ? [] : createMergeView(content),
-        ),
+        effects: mergeViewCompart.reconfigure(createMergeView(content)),
       });
     },
     setState(init: StateInitOptions) {
