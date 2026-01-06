@@ -1,6 +1,6 @@
 import { EditorState, Compartment, type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import type { ViewUpdate, Panel } from "@codemirror/view";
+import type { ViewUpdate } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
 import { type FoldOptions, foldTrans } from "./fold-services";
@@ -10,7 +10,7 @@ import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
 import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
 import { wrapModes, type WrapMode } from "./wrap-mode";
-import { statusPanel } from "./status-panel";
+import { statusPanel, type MountHandler } from "./status-panel";
 
 export interface StateInitOptions {
   /** syntax highlighting language */
@@ -37,7 +37,7 @@ export interface EventHandlerSet {
   // callback when the editor state changes
   onUpdate?: (info: ViewUpdateInfo) => void;
   // callback when the panel is mounted
-  onStatusPanelMount?: (this: Panel) => void;
+  onStatusPanelMount?: MountHandler;
 }
 
 export interface InitOptions extends StateInitOptions, EventHandlerSet {

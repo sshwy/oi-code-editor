@@ -46,12 +46,12 @@ export const statusPanelTheme = EditorView.baseTheme({
   "&dark .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff1a" },
 });
 
-type PanelOnMountFn = (this: Panel) => void;
+export type MountHandler = (this: Panel) => void;
 
 /** A facet to store the function to be called when the status panel is mounted. */
 export const statusPanelOnMountFacet = Facet.define<
-  PanelOnMountFn | undefined,
-  PanelOnMountFn | undefined
+  MountHandler | undefined,
+  MountHandler | undefined
 >({
   combine(value) {
     return function () {
@@ -125,7 +125,7 @@ export const createStatusPanel = (view: EditorView): Panel => {
 };
 
 export interface StatusPanelOptions {
-  onMount?: PanelOnMountFn;
+  onMount?: MountHandler;
 }
 
 export const statusPanel = (options?: StatusPanelOptions) => [
