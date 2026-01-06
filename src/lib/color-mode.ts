@@ -26,6 +26,12 @@ const baseTheme = EditorView.baseTheme({
     color: "black",
   },
   "&dark .cm-panel.cm-panel-lint ul [aria-selected]": { backgroundColor: "#333945" },
+  ".cm-foldGutter-marker": {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+  },
 });
 
 const themeMap = {
