@@ -48,6 +48,10 @@ export interface ViewUpdateInfo {
   update: ViewUpdate;
 }
 
+/**
+ * Creates a merge view extension if compared content is provided; otherwise
+ * returns an empty array.
+ */
 function createMergeView(content?: string) {
   if (content === undefined) return [];
   return unifiedMergeView({

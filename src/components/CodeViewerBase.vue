@@ -81,7 +81,7 @@ onMounted(() => {
 
   // to make the new props and old props different, we need to destruct the props
   // in the getter function
-  watch([() => ({ ...props }), activeTab], ([props, activeTab], [old, oldActiveTab]) => {
+  watch([() => ({ ...props }), activeTab], ([props], [old]) => {
     if (!inst.value) return;
 
     // update editor state from props if the editor is readonly
