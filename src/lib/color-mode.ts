@@ -26,6 +26,9 @@ const baseTheme = EditorView.baseTheme({
     color: "black",
   },
   "&dark .cm-panel.cm-panel-lint ul [aria-selected]": { backgroundColor: "#333945" },
+  ".cm-lintRange-active": {
+    backgroundColor: "#acacac40",
+  },
   ".cm-foldGutter-marker": {
     display: "flex",
     alignItems: "center",
