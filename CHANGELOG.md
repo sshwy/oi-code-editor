@@ -1,3 +1,48 @@
+## [0.4.0] - 2026-01-06
+
+### 🚀 Features
+
+- Add support for Python language
+- Add style entry for CSS file in package.json
+- Add no-status-panel prop to CodeEditor
+- Add lint panel styles for smooth linter integration
+- Add support for additional editor extensions in CodeEditor and CodeViewer components
+- Combine i18n phrases if multiple objects are provided
+
+### 🐛 Bug Fixes
+
+- Correct spelling of 'I18nPhrases' across multiple components and files
+
+### 🚜 Refactor
+
+- Rename ExtMap to ExtensionMap for consistency across the codebase
+- Implement better WatchUpdate ViewPlugin to enhance EditorView update handling
+- Rename onBottomPanelMount to onStatusPanelMount for clarity and consistency
+- Replace WatchUpdate ViewPlugin with a simpler update listener for improved readability and performance
+- Simplify style management for status panel items
+- Introduce wrap mode management for line wrapping functionality
+- Streamline folding functionality by introducing foldTrans for better options handling
+- Update createMergeView function to handle optional content parameter
+- Replace tabsFacet with tabsField for improved state management in editor view
+- Remove commonTabClassList and implement tabsPanelTheme for improved tab styling in CodeViewerBase
+- Remove focus outline from the code editor compoment
+- Move tab management logic from codemirror extension to CodeViewerBase
+- Update CSS variables for header height and font styling in CodeViewerBase
+- Extract tab management into a new TabsPanel component for improved code organization and reusability
+- Move status panel logic to separated file
+- Remove ConfigOptions
+- Simplify status panel integration
+- Update status panel type definitions for improved clarity
+- Enhance fold gutter marker styles
+- Update CodeViewerBase to use status panel options for improved flexibility
+- Remove redundant EventHandlerSet type
+- Simplify prop watching logic in CodeViewerBase and enhance merge view documentation
+
+### ⚙️ Miscellaneous Tasks
+
+- Add model value display in App.vue for enhanced user feedback
+- Format code
+
 ## [0.3.2] - 2026-01-02
 
 ### 🐛 Bug Fixes
