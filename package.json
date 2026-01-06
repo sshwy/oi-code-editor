@@ -7,7 +7,6 @@
     "type": "git",
     "url": "https://github.com/sshwy/oi-code-editor.git"
   },
-  "style": "dist/oi-code-editor.css",
   "files": [
     "dist",
     "LICENSE",
@@ -21,6 +20,7 @@
     ".": {
       "types": "./dist/types/src/index.d.ts",
       "import": "./dist/oi-code-editor.js",
+      "style": "./dist/oi-code-editor.css",
       "require": "./dist/oi-code-editor.umd.cjs"
     }
   },
