@@ -10,7 +10,8 @@ export interface I18nPrases {
 
 export const i18nFacet = Facet.define<I18nPrases, I18nPrases | undefined>({
   combine(value) {
-    return value[0];
+    if (!value.length) return undefined;
+    return Object.assign({}, ...value) as I18nPrases;
   },
 });
 
