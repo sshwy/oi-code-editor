@@ -13,6 +13,7 @@ import {
   type Extension,
 } from "~/lib";
 import TabsPanel from "./TabsPanel.vue";
+import type { StatusPanelOptions } from "~/lib/status-panel";
 
 const props = defineProps<{
   content?: string;
@@ -43,6 +44,14 @@ const editorRoot = useTemplateRef("editorRoot");
 
 const inst = ref<EditorInstance>();
 
+const statusPanelOptions: StatusPanelOptions = {
+  onMount() {
+    const pannelWrapper = this.dom.parentElement;
+    if (!pannelWrapper) return;
+    emit("bottomPanelMount", pannelWrapper);
+  },
+};
+
 const options: InitOptions = {
   readonly: !props.editable,
   color: props.colorMode || "light",
@@ -50,15 +59,10 @@ const options: InitOptions = {
   editMode: props.editMode,
   comparedContent: props.comparedContent,
   lang: props.lang,
-  showStatusPanel: !props.noStatusPanel,
+  statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
   lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
   extensions: props.extraExtensions,
   i18nPhrases: props.i18nPhrases,
-  onStatusPanelMount() {
-    const pannelWrapper = this.dom.parentElement;
-    if (!pannelWrapper) return;
-    emit("bottomPanelMount", pannelWrapper);
-  },
   onUpdate(info) {
     if (!info.update.state.doc.eq(info.update.startState.doc)) {
       const content = info.update.state.doc.toString();
@@ -87,7 +91,7 @@ onMounted(() => {
         content: props.content || "",
         comparedContent: props.comparedContent,
         lang: props.lang,
-        showStatusPanel: !props.noStatusPanel,
+        statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
         color: props.colorMode,
         extensions: props.extraExtensions,
         i18nPhrases: props.i18nPhrases,

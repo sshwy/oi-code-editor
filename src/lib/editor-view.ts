@@ -10,7 +10,7 @@ import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
 import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
 import { wrapModes, type WrapMode } from "./wrap-mode";
-import { statusPanel, type MountHandler } from "./status-panel";
+import { statusPanel, type StatusPanelOptions } from "./status-panel";
 
 export interface StateInitOptions {
   /** syntax highlighting language */
@@ -27,8 +27,8 @@ export interface StateInitOptions {
   extensions?: Extension;
   /** initial content of the source */
   content: string;
-  /** whether to show the status panel */
-  showStatusPanel?: boolean;
+  /** status panel options. hide the status panel if undefined */
+  statusPanel?: StatusPanelOptions;
   /** initial i18n phrases */
   i18nPhrases?: I18nPrases;
 }
@@ -36,8 +36,6 @@ export interface StateInitOptions {
 export interface EventHandlerSet {
   // callback when the editor state changes
   onUpdate?: (info: ViewUpdateInfo) => void;
-  // callback when the panel is mounted
-  onStatusPanelMount?: MountHandler;
 }
 
 export interface InitOptions extends StateInitOptions, EventHandlerSet {
@@ -81,7 +79,6 @@ export function useEditorView(el: Element, init: InitOptions) {
     ? viewerSetup
     : [editorSetup, init.onUpdate ? watchUpdate(init.onUpdate) : []];
 
-  const onStatusPanelMount = init.onStatusPanelMount;
   const createState = (init: StateInitOptions): EditorState => {
     let startState = EditorState.create({
       doc: init.content,
@@ -94,7 +91,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         mergeViewCompart.of(createMergeView(init.comparedContent)),
         langSupports.of(init.lang || "text"),
         extraExt,
-        init.showStatusPanel !== false ? statusPanel({ onMount: onStatusPanelMount }) : [],
+        init.statusPanel ? statusPanel(init.statusPanel) : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
         init.extensions || [],
       ],
