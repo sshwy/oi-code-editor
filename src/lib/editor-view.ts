@@ -12,27 +12,24 @@ import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
 import { wrapModes, type WrapMode } from "./wrap-mode";
 import { statusPanel, statusPanelTheme } from "./status-panel";
 
-export interface ConfigOptions {
-  // syntax highlighting language
+export interface StateInitOptions {
+  /** syntax highlighting language */
   lang?: LangKind;
-  // whether to enable vim mode
+  /** whether to enable vim mode */
   editMode?: EditMode;
-  // whether to wrap the lines
+  /** whether to wrap the lines */
   lineWrap?: WrapMode;
-  // color theme
+  /** color theme */
   color?: ColorMode;
-  // content of the compared source
+  /** content of the compared source */
   comparedContent?: string;
   /** additional editor extensions */
   extensions?: Extension;
-}
-
-export interface StateInitOptions extends ConfigOptions {
-  // initial content of the source
+  /** initial content of the source */
   content: string;
-  // whether to show the status panel
+  /** whether to show the status panel */
   showStatusPanel?: boolean;
-  // initial i18n phrases
+  /** initial i18n phrases */
   i18nPhrases?: I18nPrases;
 }
 
@@ -78,16 +75,6 @@ const watchUpdate = (fn: (info: ViewUpdateInfo) => void) =>
 
 const mergeViewCompart = new Compartment();
 
-const baseExt = (init: ConfigOptions) => [
-  basicSetup,
-  colorModes.of(init.color || "light"),
-  // make sure vim is included before other keymaps
-  editModes.of(init.editMode || "simple"),
-  wrapModes.of(init.lineWrap || "nowrap"),
-  mergeViewCompart.of(createMergeView(init.comparedContent)),
-  langSupports.of(init.lang || "text"),
-];
-
 // Create a code editor view on the given element and items.
 export function useEditorView(el: Element, init: InitOptions) {
   const extraExt = init.readonly
@@ -99,7 +86,13 @@ export function useEditorView(el: Element, init: InitOptions) {
     let startState = EditorState.create({
       doc: init.content,
       extensions: [
-        baseExt(init),
+        basicSetup,
+        colorModes.of(init.color || "light"),
+        // make sure vim is included before other keymaps
+        editModes.of(init.editMode || "simple"),
+        wrapModes.of(init.lineWrap || "nowrap"),
+        mergeViewCompart.of(createMergeView(init.comparedContent)),
+        langSupports.of(init.lang || "text"),
         extraExt,
         init.showStatusPanel !== false
           ? [statusPanelTheme, showPanel.of(statusPanel(onStatusPanelMount))]
