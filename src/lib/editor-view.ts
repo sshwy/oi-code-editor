@@ -33,13 +33,10 @@ export interface StateInitOptions {
   i18nPhrases?: I18nPrases;
 }
 
-export interface EventHandlerSet {
-  // callback when the editor state changes
+export interface InitOptions extends StateInitOptions {
+  /** callback when the editor state changes */
   onUpdate?: (info: ViewUpdateInfo) => void;
-}
-
-export interface InitOptions extends StateInitOptions, EventHandlerSet {
-  // whether the editor is readonly
+  /** whether the editor is readonly */
   readonly?: boolean;
 }
 
