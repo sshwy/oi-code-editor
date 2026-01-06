@@ -1,3 +1,14 @@
+## [0.5.0] - 2026-01-06
+
+### 🚀 Features
+
+- Add initialFold prop to CodeEditor for customizable folding options
+- Add active lint range styling to color mode
+
+### 🚜 Refactor
+
+- Enhance CodeViewerBase and editor-view to support customizable folding options
+
 ## [0.4.0] - 2026-01-06
 
 ### 🚀 Features
