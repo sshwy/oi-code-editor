@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { ColorMode, EditMode, Extension, FoldOptions, I18nPrases, LangKind } from '~/lib';
-import CodeViewerBase from './CodeViewerBase.vue';
+import { computed } from "vue";
+import type { ColorMode, EditMode, Extension, FoldOptions, I18nPrases, LangKind } from "~/lib";
+import CodeViewerBase from "./CodeViewerBase.vue";
 
 const props = defineProps<{
   items: {
@@ -22,7 +22,7 @@ const props = defineProps<{
   extraExtensions?: Extension;
 }>();
 
-const editMode = defineModel<EditMode>('editMode');
+const editMode = defineModel<EditMode>("editMode");
 
 const activeId = defineModel<string | undefined>();
 const safeActiveId = computed<string | undefined>(() => {

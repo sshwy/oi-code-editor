@@ -1,44 +1,49 @@
 <script setup lang="ts">
-import { CodeEditor, CodeViewer } from '~/components';
-import dmstText from '~/assets/dmst.cpp?raw';
-import headText from '~/assets/head.h?raw'
-import ratingText from '~/assets/rating.rs?raw'
-import euclideanoidText from '~/assets/euclideanoid.cpp?raw'
-import fwtAndText from '~/assets/fwt_and.cpp?raw'
-import fwtOrText from '~/assets/fwt_or.cpp?raw'
-import { useColorMode } from '@vueuse/core'
-import { computed, ref } from 'vue';
-import type { EditMode } from '~/lib';
+import { CodeEditor, CodeViewer } from "~/components";
+import dmstText from "~/assets/dmst.cpp?raw";
+import headText from "~/assets/head.h?raw";
+import ratingText from "~/assets/rating.rs?raw";
+import euclideanoidText from "~/assets/euclideanoid.cpp?raw";
+import fwtAndText from "~/assets/fwt_and.cpp?raw";
+import fwtOrText from "~/assets/fwt_or.cpp?raw";
+import { useColorMode } from "@vueuse/core";
+import { computed, ref } from "vue";
+import type { EditMode } from "~/lib";
 
-const color = useColorMode()
-color.value = 'auto'
-const presentColor = computed(() => color.value as 'light' | 'dark')
+const color = useColorMode();
+color.value = "auto";
+const presentColor = computed(() => color.value as "light" | "dark");
 
-const items = [{
-  id: '1',
-  label: 'dmst.cpp',
-  content: dmstText,
-  lang: 'cpp' as const,
-}, {
-  id: '2',
-  label: 'head.h',
-  content: headText,
-  lang: 'cpp' as const,
-}, {
-  id: '3',
-  label: 'rating.rs',
-  content: ratingText,
-  lang: 'rust' as const,
-}, {
-  id: '4',
-  label: 'fwt (diff)',
-  content: fwtAndText,
-  comparedContent: fwtOrText,
-  lang: 'cpp' as const,
-}]
+const items = [
+  {
+    id: "1",
+    label: "dmst.cpp",
+    content: dmstText,
+    lang: "cpp" as const,
+  },
+  {
+    id: "2",
+    label: "head.h",
+    content: headText,
+    lang: "cpp" as const,
+  },
+  {
+    id: "3",
+    label: "rating.rs",
+    content: ratingText,
+    lang: "rust" as const,
+  },
+  {
+    id: "4",
+    label: "fwt (diff)",
+    content: fwtAndText,
+    comparedContent: fwtOrText,
+    lang: "cpp" as const,
+  },
+];
 
-const code = ref(euclideanoidText)
-const editMode = ref<EditMode>()
+const code = ref(euclideanoidText);
+const editMode = ref<EditMode>();
 </script>
 
 <template>
@@ -82,10 +87,9 @@ const editMode = ref<EditMode>()
 
       <p>Model Value:</p>
 
-      <pre
-        class="text-[13px] border border-slate-300 dark:border-slate-700 px-3 py-2"
-        >{{ code }}</pre
-      >
+      <pre class="text-[13px] border border-slate-300 dark:border-slate-700 px-3 py-2">{{
+        code
+      }}</pre>
 
       <p>Static code viewing demo:</p>
 

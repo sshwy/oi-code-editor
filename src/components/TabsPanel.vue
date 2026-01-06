@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TabItem } from '~/lib';
+import type { TabItem } from "~/lib";
 
 defineProps<{
   tabs: TabItem[];
@@ -39,21 +39,21 @@ const activeTab = defineModel<string | undefined>({ required: true });
   color: #abb2bf;
 }
 
-.code-viewer-tab-panel>.code-viewer-tab-item {
+.code-viewer-tab-panel > .code-viewer-tab-item {
   padding: 4px 12px;
   border-right: 1px solid #ddd;
   cursor: pointer;
 }
 
-.dark .code-viewer-tab-panel>.code-viewer-tab-item {
+.dark .code-viewer-tab-panel > .code-viewer-tab-item {
   border-right: 1px solid #383838;
 }
 
-.code-viewer-tab-panel>.code-viewer-tab-item:hover {
+.code-viewer-tab-panel > .code-viewer-tab-item:hover {
   background-color: #ffffff80;
 }
 
-.dark .code-viewer-tab-panel>.code-viewer-tab-item:hover {
+.dark .code-viewer-tab-panel > .code-viewer-tab-item:hover {
   background-color: #ffffff0f;
 }
 

@@ -29,19 +29,19 @@ Build artifacts appear in `dist/`, with the library delivering ESM/CJS bundles p
 ## Usage
 
 ```ts
-import { createApp } from 'vue'
-import { CodeViewer } from 'oi-code-editor/components'
+import { createApp } from "vue";
+import { CodeViewer } from "oi-code-editor/components";
 
 createApp({
   template: '<CodeViewer :items="items" />',
   data: () => ({
     items: [
-      { id: '1', label: 'dmst.cpp', content: '...cpp source...', lang: 'cpp' },
-      { id: '2', label: 'head.h', content: '...header...', lang: 'cpp' },
-      { id: '3', label: 'rating.rs', content: '...Rust source...', lang: 'rust' },
+      { id: "1", label: "dmst.cpp", content: "...cpp source...", lang: "cpp" },
+      { id: "2", label: "head.h", content: "...header...", lang: "cpp" },
+      { id: "3", label: "rating.rs", content: "...Rust source...", lang: "rust" },
     ],
   }),
-}).mount('#app')
+}).mount("#app");
 ```
 
 `CodeViewer` accepts optional tabs, status panel controls, line wrapping, and a `colorMode` prop so it can integrate with both light and dark themes. The demo app shows how to configure these props for a tabbed, theme-aware presentation.

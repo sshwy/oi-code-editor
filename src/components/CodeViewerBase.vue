@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import { onMounted, ref, useTemplateRef, watch } from 'vue';
-import { type I18nPrases, useEditorView, type EditorInstance, type FoldOptions, type InitOptions, type LangKind, type TabItem, type EditMode, type ColorMode, type Extension } from '~/lib';
-import TabsPanel from './TabsPanel.vue';
+import { onMounted, ref, useTemplateRef, watch } from "vue";
+import {
+  type I18nPrases,
+  useEditorView,
+  type EditorInstance,
+  type FoldOptions,
+  type InitOptions,
+  type LangKind,
+  type TabItem,
+  type EditMode,
+  type ColorMode,
+  type Extension,
+} from "~/lib";
+import TabsPanel from "./TabsPanel.vue";
 
 const props = defineProps<{
   content?: string;
@@ -23,7 +34,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   "update:content": [content: string];
   "update:editMode": [editMode: EditMode];
-  "bottomPanelMount": [el: HTMLElement]
+  bottomPanelMount: [el: HTMLElement];
 }>();
 
 const activeTab = defineModel<string | undefined>("activeTab");
@@ -34,8 +45,8 @@ const inst = ref<EditorInstance>();
 
 const options: InitOptions = {
   readonly: !props.editable,
-  color: props.colorMode || 'light',
-  content: props.content || '',
+  color: props.colorMode || "light",
+  content: props.content || "",
   editMode: props.editMode,
   comparedContent: props.comparedContent,
   lang: props.lang,
@@ -57,7 +68,7 @@ const options: InitOptions = {
       emit("update:editMode", info.editMode);
     }
   },
-}
+};
 
 onMounted(() => {
   if (!editorRoot.value) return;
@@ -66,47 +77,44 @@ onMounted(() => {
 
   // to make the new props and old props different, we need to destruct the props
   // in the getter function
-  watch(
-    [() => ({ ...props }), activeTab],
-    ([props, activeTab], [old, oldActiveTab]) => {
-      if (!inst.value) return;
+  watch([() => ({ ...props }), activeTab], ([props, activeTab], [old, oldActiveTab]) => {
+    if (!inst.value) return;
 
-      // update editor state from props if the editor is readonly
-      // If the editor is editable, the content can only be updated by the user.
-      if (props.content !== old.content && !props.editable) {
-        inst.value.setState({
-          content: props.content || '',
-          comparedContent: props.comparedContent,
-          lang: props.lang,
-          showStatusPanel: !props.noStatusPanel,
-          color: props.colorMode,
-          extensions: props.extraExtensions,
-          i18nPhrases: props.i18nPhrases,
-          // inherit these settings from previous state
-          lineWrap: inst.value.lineWrap,
-          editMode: inst.value.editMode,
-        });
-        inst.value.fold(props.initialFold);
-        return;
-      }
+    // update editor state from props if the editor is readonly
+    // If the editor is editable, the content can only be updated by the user.
+    if (props.content !== old.content && !props.editable) {
+      inst.value.setState({
+        content: props.content || "",
+        comparedContent: props.comparedContent,
+        lang: props.lang,
+        showStatusPanel: !props.noStatusPanel,
+        color: props.colorMode,
+        extensions: props.extraExtensions,
+        i18nPhrases: props.i18nPhrases,
+        // inherit these settings from previous state
+        lineWrap: inst.value.lineWrap,
+        editMode: inst.value.editMode,
+      });
+      inst.value.fold(props.initialFold);
+      return;
+    }
 
-      if (props.colorMode !== old.colorMode) {
-        inst.value.colorMode = props.colorMode;
-      }
+    if (props.colorMode !== old.colorMode) {
+      inst.value.colorMode = props.colorMode;
+    }
 
-      if (props.comparedContent !== old.comparedContent) {
-        inst.value.setOriginalDoc(props.comparedContent);
-      }
+    if (props.comparedContent !== old.comparedContent) {
+      inst.value.setOriginalDoc(props.comparedContent);
+    }
 
-      if (props.lang !== old.lang) {
-        inst.value.lang = props.lang;
-      }
+    if (props.lang !== old.lang) {
+      inst.value.lang = props.lang;
+    }
 
-      if (props.editMode && props.editMode !== old.editMode) {
-        inst.value.editMode = props.editMode;
-      }
-    },
-  );
+    if (props.editMode && props.editMode !== old.editMode) {
+      inst.value.editMode = props.editMode;
+    }
+  });
 });
 </script>
 
