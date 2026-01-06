@@ -1,7 +1,8 @@
-import { EditorView, ViewUpdate, type Panel } from "@codemirror/view";
+import { EditorView, showPanel, ViewUpdate, type Panel } from "@codemirror/view";
 import { editModes } from "./edit-mode";
 import { tr } from "./i18n";
 import { wrapModes } from "./wrap-mode";
+import { Facet } from "@codemirror/state";
 
 function createStatusPanelItem(
   view: EditorView,
@@ -45,67 +46,90 @@ export const statusPanelTheme = EditorView.baseTheme({
   "&dark .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#ffffff1a" },
 });
 
-export const statusPanel =
-  (cb?: (this: Panel) => void) =>
-  (view: EditorView): Panel => {
-    const dom = document.createElement("div");
-    dom.classList.add("cm-status-panel");
+type PanelOnMountFn = (this: Panel) => void;
 
-    const charCount = createStatusPanelItem(view, function (view) {
-      this.textContent = view.state.doc.length + " " + tr(view.state, "characters");
-    });
+/** A facet to store the function to be called when the status panel is mounted. */
+export const statusPanelOnMountFacet = Facet.define<
+  PanelOnMountFn | undefined,
+  PanelOnMountFn | undefined
+>({
+  combine(value) {
+    return function () {
+      for (const fn of value) {
+        fn?.call(this);
+      }
+    };
+  },
+});
 
-    const vimStatus = createStatusPanelItem(
-      view,
-      function (view) {
-        this.textContent =
-          editModes.read(view.state) === "vim"
-            ? tr(view.state, "vim_mode")
-            : tr(view.state, "simple_mode");
-      },
-      {
-        click: function (view) {
-          view.dispatch({
-            effects: editModes.reconfigure(editModes.read(view.state) === "vim" ? "simple" : "vim"),
-          });
-        },
-      },
-    );
+export const createStatusPanel = (view: EditorView): Panel => {
+  const dom = document.createElement("div");
+  dom.classList.add("cm-status-panel");
 
-    const lineWrapStatus = createStatusPanelItem(
-      view,
-      function (view) {
-        this.textContent =
-          wrapModes.read(view.state) === "wrap"
-            ? tr(view.state, "line_wrap")
-            : tr(view.state, "line_nowrap");
-      },
-      {
-        click: function (view) {
-          view.dispatch({
-            effects: wrapModes.reconfigure(
-              wrapModes.read(view.state) === "wrap" ? "nowrap" : "wrap",
-            ),
-          });
-        },
-      },
-    );
+  const charCount = createStatusPanelItem(view, function (view) {
+    this.textContent = view.state.doc.length + " " + tr(view.state, "characters");
+  });
 
-    const items = [charCount, vimStatus, lineWrapStatus];
-
-    items.forEach((item) => {
-      dom.appendChild(item.dom);
-    });
-
-    return {
-      dom,
-      update(update) {
-        items.forEach((item) => {
-          item.update(update);
+  const vimStatus = createStatusPanelItem(
+    view,
+    function (view) {
+      this.textContent =
+        editModes.read(view.state) === "vim"
+          ? tr(view.state, "vim_mode")
+          : tr(view.state, "simple_mode");
+    },
+    {
+      click: function (view) {
+        view.dispatch({
+          effects: editModes.reconfigure(editModes.read(view.state) === "vim" ? "simple" : "vim"),
         });
       },
-      mount() {
-        cb?.call(this);
+    },
+  );
+
+  const lineWrapStatus = createStatusPanelItem(
+    view,
+    function (view) {
+      this.textContent =
+        wrapModes.read(view.state) === "wrap"
+          ? tr(view.state, "line_wrap")
+          : tr(view.state, "line_nowrap");
+    },
+    {
+      click: function (view) {
+        view.dispatch({
+          effects: wrapModes.reconfigure(wrapModes.read(view.state) === "wrap" ? "nowrap" : "wrap"),
+        });
       },
-    };
+    },
+  );
+
+  const items = [charCount, vimStatus, lineWrapStatus];
+
+  items.forEach((item) => {
+    dom.appendChild(item.dom);
+  });
+
+  return {
+    dom,
+    update(update) {
+      items.forEach((item) => {
+        item.update(update);
+      });
+    },
+    mount() {
+      const fn = view.state.facet(statusPanelOnMountFacet);
+      fn?.call(this);
+    },
   };
+};
+
+export interface StatusPanelOptions {
+  onMount?: PanelOnMountFn;
+}
+
+export const statusPanel = (options?: StatusPanelOptions) => [
+  statusPanelTheme,
+  statusPanelOnMountFacet.of(options?.onMount),
+  showPanel.of(createStatusPanel),
+];

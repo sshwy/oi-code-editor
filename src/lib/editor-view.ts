@@ -1,5 +1,5 @@
 import { EditorState, Compartment, type Extension } from "@codemirror/state";
-import { EditorView, showPanel } from "@codemirror/view";
+import { EditorView } from "@codemirror/view";
 import type { ViewUpdate, Panel } from "@codemirror/view";
 import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
@@ -10,7 +10,7 @@ import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
 import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
 import { wrapModes, type WrapMode } from "./wrap-mode";
-import { statusPanel, statusPanelTheme } from "./status-panel";
+import { statusPanel } from "./status-panel";
 
 export interface StateInitOptions {
   /** syntax highlighting language */
@@ -94,9 +94,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         mergeViewCompart.of(createMergeView(init.comparedContent)),
         langSupports.of(init.lang || "text"),
         extraExt,
-        init.showStatusPanel !== false
-          ? [statusPanelTheme, showPanel.of(statusPanel(onStatusPanelMount))]
-          : [],
+        init.showStatusPanel !== false ? statusPanel({ onMount: onStatusPanelMount }) : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
         init.extensions || [],
       ],
