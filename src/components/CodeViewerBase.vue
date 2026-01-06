@@ -53,16 +53,17 @@ const statusPanelOptions: StatusPanelOptions = {
 };
 
 const options: InitOptions = {
-  readonly: !props.editable,
   color: props.colorMode || "light",
+  comparedContent: props.comparedContent,
   content: props.content || "",
   editMode: props.editMode,
-  comparedContent: props.comparedContent,
-  lang: props.lang,
-  statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
-  lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
   extensions: props.extraExtensions,
+  fold: props.initialFold,
   i18nPhrases: props.i18nPhrases,
+  lang: props.lang,
+  lineWrap: props.initialLineWrap ? "wrap" : "nowrap",
+  readonly: !props.editable,
+  statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
   onUpdate(info) {
     if (!info.update.state.doc.eq(info.update.startState.doc)) {
       const content = info.update.state.doc.toString();
@@ -77,7 +78,6 @@ const options: InitOptions = {
 onMounted(() => {
   if (!editorRoot.value) return;
   inst.value = useEditorView(editorRoot.value, options);
-  inst.value.fold(props.initialFold);
 
   // to make the new props and old props different, we need to destruct the props
   // in the getter function
@@ -88,18 +88,18 @@ onMounted(() => {
     // If the editor is editable, the content can only be updated by the user.
     if (props.content !== old.content && !props.editable) {
       inst.value.setState({
-        content: props.content || "",
+        color: props.colorMode,
         comparedContent: props.comparedContent,
+        content: props.content || "",
+        extensions: props.extraExtensions,
+        fold: props.initialFold,
+        i18nPhrases: props.i18nPhrases,
         lang: props.lang,
         statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
-        color: props.colorMode,
-        extensions: props.extraExtensions,
-        i18nPhrases: props.i18nPhrases,
         // inherit these settings from previous state
         lineWrap: inst.value.lineWrap,
         editMode: inst.value.editMode,
       });
-      inst.value.fold(props.initialFold);
       return;
     }
 

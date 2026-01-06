@@ -11,6 +11,7 @@ import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
 import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
 import { wrapModes, type WrapMode } from "./wrap-mode";
 import { statusPanel, type StatusPanelOptions } from "./status-panel";
+import { foldGutter } from "@codemirror/language";
 
 export interface StateInitOptions {
   /** syntax highlighting language */
@@ -31,6 +32,8 @@ export interface StateInitOptions {
   statusPanel?: StatusPanelOptions;
   /** initial i18n phrases */
   i18nPhrases?: I18nPhrases;
+  /** default folding options. hide the folding gutter if undefined */
+  fold?: FoldOptions;
 }
 
 export interface InitOptions extends StateInitOptions {
@@ -85,6 +88,22 @@ export function useEditorView(el: Element, init: InitOptions) {
       doc: init.content,
       extensions: [
         basicSetup,
+        init.fold
+          ? foldGutter({
+              markerDOM(open) {
+                const div = document.createElement("div");
+                if (!open) {
+                  div.innerHTML =
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>';
+                } else {
+                  div.innerHTML =
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>';
+                }
+                div.className = "cm-foldGutter-marker";
+                return div;
+              },
+            })
+          : [],
         colorModes.of(init.color || "light"),
         // make sure vim is included before other keymaps
         editModes.of(init.editMode || "simple"),
@@ -97,6 +116,10 @@ export function useEditorView(el: Element, init: InitOptions) {
         init.extensions || [],
       ],
     });
+
+    if (init.fold) {
+      startState = startState.update(foldTrans(startState, init.fold)).state;
+    }
 
     return startState;
   };
@@ -164,19 +187,9 @@ export function useEditorView(el: Element, init: InitOptions) {
     setState(init: StateInitOptions) {
       view.setState(createState(init));
     },
-    fold(options?: FoldOptions) {
+    fold(options: FoldOptions) {
       const state = view.state;
-      view.dispatch(
-        foldTrans(
-          state,
-          options || {
-            comment: true,
-            preprocessor: true,
-            using: true,
-            typedef: true,
-          },
-        ),
-      );
+      view.dispatch(foldTrans(state, options));
     },
   };
 }
