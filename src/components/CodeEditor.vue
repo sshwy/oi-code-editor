@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { I18nPhrases, LangKind, EditMode, ColorMode, Extension } from "~/lib";
+import type { I18nPhrases, LangKind, EditMode, ColorMode, Extension, FoldOptions } from "~/lib";
 import CodeViewerBase from "./CodeViewerBase.vue";
 
 defineProps<{
@@ -10,6 +10,7 @@ defineProps<{
   noStatusPanel?: boolean;
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
+  initialFold?: FoldOptions;
 }>();
 
 const content = defineModel<string | undefined>({ required: true });
@@ -27,5 +28,6 @@ const editMode = defineModel<EditMode>("editMode");
     editable
     :i18n-phrases
     :extra-extensions
+    :initial-fold
   />
 </template>
