@@ -5,7 +5,7 @@ import { getOriginalDoc, unifiedMergeView } from "@codemirror/merge";
 
 import { type FoldOptions, foldTrans } from "./fold-services";
 import { isSupportedLanguage, langSupports, type LangKind } from "./language-supports";
-import { i18nFacet, type I18nPrases } from "./i18n";
+import { i18nFacet, type I18nPhrases } from "./i18n";
 import { basicSetup, editorSetup, viewerSetup } from "./extensions";
 import { editModes, isSupportedEditMode, type EditMode } from "./edit-mode";
 import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
@@ -30,7 +30,7 @@ export interface StateInitOptions {
   /** status panel options. hide the status panel if undefined */
   statusPanel?: StatusPanelOptions;
   /** initial i18n phrases */
-  i18nPhrases?: I18nPrases;
+  i18nPhrases?: I18nPhrases;
 }
 
 export interface InitOptions extends StateInitOptions {

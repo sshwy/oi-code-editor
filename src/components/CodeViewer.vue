@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ColorMode, EditMode, Extension, FoldOptions, I18nPrases, LangKind } from "~/lib";
+import type { ColorMode, EditMode, Extension, FoldOptions, I18nPhrases, LangKind } from "~/lib";
 import CodeViewerBase from "./CodeViewerBase.vue";
 
 const props = defineProps<{
@@ -17,7 +17,7 @@ const props = defineProps<{
   lineWrap?: boolean;
   initialFold?: FoldOptions;
   colorMode?: ColorMode;
-  i18nPhrases?: I18nPrases;
+  i18nPhrases?: I18nPhrases;
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
 }>();

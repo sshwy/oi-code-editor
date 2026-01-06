@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from "vue";
 import {
-  type I18nPrases,
+  type I18nPhrases,
   useEditorView,
   type EditorInstance,
   type FoldOptions,
@@ -29,7 +29,7 @@ const props = defineProps<{
   tabs?: TabItem[];
   noStatusPanel?: boolean;
   colorMode?: ColorMode;
-  i18nPhrases?: I18nPrases;
+  i18nPhrases?: I18nPhrases;
 }>();
 
 const emit = defineEmits<{

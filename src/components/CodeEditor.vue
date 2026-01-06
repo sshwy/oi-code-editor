@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { I18nPrases, LangKind, EditMode, ColorMode, Extension } from "~/lib";
+import type { I18nPhrases, LangKind, EditMode, ColorMode, Extension } from "~/lib";
 import CodeViewerBase from "./CodeViewerBase.vue";
 
 defineProps<{
   lang?: LangKind;
   comparedContent?: string;
   colorMode?: ColorMode;
-  i18nPhrases?: I18nPrases;
+  i18nPhrases?: I18nPhrases;
   noStatusPanel?: boolean;
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
