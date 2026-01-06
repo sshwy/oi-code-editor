@@ -1,3 +1,9 @@
+## [0.5.1] - 2026-01-06
+
+### 🐛 Bug Fixes
+
+- Move style entry to the main fields in package.json
+
 ## [0.5.0] - 2026-01-06
 
 ### 🚀 Features
