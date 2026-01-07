@@ -1,3 +1,14 @@
+## [0.6.0] - 2026-01-07
+
+### 🚀 Features
+
+- Add initialLineWrap prop to CodeEditor for customizable line wrapping options
+
+### 🎨 Styling
+
+- Add overflow-x and white-space properties to TabsPanel for improved tab layout
+- Add overflow-x and white-space properties to status panel for improved layout
+
 ## [0.5.1] - 2026-01-06
 
 ### 🐛 Bug Fixes
