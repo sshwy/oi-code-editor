@@ -11,6 +11,7 @@ defineProps<{
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
   initialFold?: FoldOptions;
+  initialLineWrap?: boolean;
 }>();
 
 const content = defineModel<string | undefined>({ required: true });
@@ -29,5 +30,6 @@ const editMode = defineModel<EditMode>("editMode");
     :i18n-phrases
     :extra-extensions
     :initial-fold
+    :initial-line-wrap
   />
 </template>
