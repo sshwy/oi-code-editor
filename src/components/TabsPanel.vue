@@ -31,6 +31,7 @@ const activeTab = defineModel<string | undefined>({ required: true });
   border-bottom: none;
   background-color: #f5f5f5;
   color: black;
+  overflow-x: auto;
 }
 
 .dark .code-viewer-tab-panel {
@@ -43,6 +44,7 @@ const activeTab = defineModel<string | undefined>({ required: true });
   padding: 4px 12px;
   border-right: 1px solid #ddd;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .dark .code-viewer-tab-panel > .code-viewer-tab-item {
