@@ -34,11 +34,12 @@ function createStatusPanelItem(
 }
 
 export const statusPanelTheme = EditorView.baseTheme({
-  ".cm-status-panel": { display: "flex", fontSize: "12px", gap: "4px" },
+  ".cm-status-panel": { display: "flex", fontSize: "12px", gap: "4px", overflowX: "hidden" },
   ".cm-status-panel > .cm-panel-item": {
     padding: "2px 4px",
     cursor: "pointer",
     userSelect: "none",
+    whiteSpace: "nowrap",
   },
   // "hover:bg-black/5"
   "&light .cm-status-panel > .cm-panel-item:hover": { backgroundColor: "#0000000d" },

@@ -87,9 +87,10 @@ const editMode = ref<EditMode>();
 
       <p>Model Value:</p>
 
-      <pre class="text-[13px] border border-slate-300 dark:border-slate-700 px-3 py-2">{{
-        code
-      }}</pre>
+      <pre
+        class="text-[13px] border border-slate-300 dark:border-slate-700 px-3 py-2 overflow-auto"
+        >{{ code }}</pre
+      >
 
       <p>Static code viewing demo:</p>
 
