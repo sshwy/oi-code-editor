@@ -23,7 +23,7 @@ const activeTab = defineModel<string | undefined>({ required: true });
 <style>
 .code-viewer-tab-panel {
   position: sticky;
-  top: var(--oce-header-height);
+  top: var(--oce-header-height, 0px);
   z-index: 10;
   display: flex;
   font-size: 13px;

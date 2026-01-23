@@ -9,7 +9,7 @@ const baseTheme = EditorView.baseTheme({
   },
   ".cm-scroller": {
     fontSize: "13px",
-    fontFamily: "var(--oce-font-mono)",
+    fontFamily: "var(--oce-font-mono, monospace)",
   },
   "&.cm-focused": {
     outline: "none",
