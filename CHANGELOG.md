@@ -1,3 +1,13 @@
+## [0.7.0] - 2026-01-23
+
+### 🚀 Features
+
+- Allow using --ocs-status-panel-bottom to control bottom position for status panel
+
+### 🐛 Bug Fixes
+
+- Set default value for header height and font family if css var not presented
+
 ## [0.6.0] - 2026-01-07
 
 ### 🚀 Features
