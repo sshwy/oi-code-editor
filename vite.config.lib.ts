@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 
-const codemirrorGlobals = {
+const globals = {
   "@codemirror/commands": "CodeMirrorCommands",
   "@codemirror/lang-cpp": "CodeMirrorLangCpp",
   "@codemirror/lang-json": "CodeMirrorLangJson",
@@ -14,6 +14,7 @@ const codemirrorGlobals = {
   "@codemirror/state": "CodeMirrorState",
   "@codemirror/theme-one-dark": "CodeMirrorThemeOneDark",
   "@codemirror/view": "CodeMirrorView",
+  vue: "Vue",
 };
 
 export default defineConfig({
@@ -31,12 +32,9 @@ export default defineConfig({
       fileName: "oi-code-editor",
     },
     rollupOptions: {
-      external: ["vue", ...Object.keys(codemirrorGlobals)],
+      external: [...Object.keys(globals)],
       output: {
-        globals: {
-          vue: "Vue",
-          ...codemirrorGlobals,
-        },
+        globals,
       },
     },
   },
