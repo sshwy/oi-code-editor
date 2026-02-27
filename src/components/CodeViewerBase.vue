@@ -88,7 +88,7 @@ onMounted(() => {
     // update editor state from props if the editor is readonly
     // If the editor is editable, the content can only be updated by the user.
     if (props.content !== old.content && !props.editable) {
-      inst.value.setState({
+      inst.value.recreateState({
         color: props.colorMode,
         comparedContent: props.comparedContent,
         content: props.content || "",

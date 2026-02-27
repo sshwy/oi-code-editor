@@ -184,7 +184,13 @@ export function useEditorView(el: Element, init: InitOptions) {
         effects: mergeViewCompart.reconfigure(createMergeView(content)),
       });
     },
-    setState(init: StateInitOptions) {
+    get state() {
+      return view.state;
+    },
+    set state(state: EditorState) {
+      view.setState(state);
+    },
+    recreateState(init: StateInitOptions) {
       view.setState(createState(init));
     },
     fold(options: FoldOptions) {
