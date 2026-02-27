@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CodeEditor, CodeViewer } from "~/components";
+import { CodeEditor, CodeEditor2, CodeViewer } from "~/components";
 import dmstText from "~/assets/dmst.cpp?raw";
 import headText from "~/assets/head.h?raw";
 import ratingText from "~/assets/rating.rs?raw";
@@ -44,6 +44,29 @@ const items = [
 
 const code = ref(euclideanoidText);
 const editMode = ref<EditMode>();
+
+const multiTabs = ref([
+  {
+    id: "multi-1",
+    label: "dmst.cpp",
+    content: dmstText,
+    lang: "cpp" as const,
+  },
+  {
+    id: "multi-2",
+    label: "head.h",
+    content: headText,
+    lang: "cpp" as const,
+  },
+  {
+    id: "multi-3",
+    label: "rating.rs",
+    content: ratingText,
+    lang: "rust" as const,
+  },
+]);
+
+const multiActiveTab = ref<string | undefined>("multi-1");
 </script>
 
 <template>
@@ -105,6 +128,30 @@ const editMode = ref<EditMode>();
           typedef: true,
         }"
       />
+
+      <p>Multi-tab code editor demo:</p>
+
+      <CodeEditor2
+        v-model="multiTabs"
+        v-model:activeTab="multiActiveTab"
+        v-model:editMode="editMode"
+        :color-mode="presentColor"
+        :i18n-phrases="{
+          characters: '字符',
+          line_nowrap: '不自动换行',
+          line_wrap: '自动换行',
+          simple_mode: '简单模式',
+          vim_mode: 'Vim 模式',
+        }"
+        :initial-fold="{}"
+      />
+
+      <p>Multi-tab model value:</p>
+
+      <pre
+        class="text-[13px] border border-slate-300 dark:border-slate-700 px-3 py-2 overflow-auto"
+        >{{ multiTabs }}</pre
+      >
     </div>
   </div>
 </template>
