@@ -1,3 +1,15 @@
+## [0.8.0] - 2026-02-28
+
+### 🚀 Features
+
+- Add multi-tab support with CodeEditor2 component for enhanced code editing experience
+- Integrate linting functionality with CodeMirror for enhanced code diagnostics
+
+### 🚜 Refactor
+
+- Rename codemirrorGlobals to globals and simplify external dependencies configuration
+- Update state management in CodeViewerBase and editor-view components
+
 ## [0.7.0] - 2026-01-23
 
 ### 🚀 Features
