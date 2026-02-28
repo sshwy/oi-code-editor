@@ -9,17 +9,51 @@ import fwtOrText from "~/assets/fwt_or.cpp?raw";
 import { useColorMode } from "@vueuse/core";
 import { computed, ref } from "vue";
 import type { EditMode } from "~/lib";
+import type { ViewerItem } from "./components/CodeViewer.vue";
 
 const color = useColorMode();
 color.value = "auto";
 const presentColor = computed(() => color.value as "light" | "dark");
 
-const items = [
+const viewerItems: ViewerItem[] = [
   {
     id: "1",
     label: "dmst.cpp",
     content: dmstText,
     lang: "cpp" as const,
+    diagnostics: [
+      {
+        from: 7,
+        to: 30,
+        severity: "error",
+        message: "Error message",
+        source: "Manual",
+      },
+
+      {
+        from: 300,
+        to: 305,
+        severity: "warning",
+        message: "Warning message",
+        source: "Manual",
+      },
+
+      {
+        from: 310,
+        to: 315,
+        severity: "hint",
+        message: "Hint message",
+        source: "Manual",
+      },
+
+      {
+        from: 340,
+        to: 345,
+        severity: "info",
+        message: "info message",
+        source: "Manual",
+      },
+    ],
   },
   {
     id: "2",
@@ -119,7 +153,7 @@ const multiActiveTab = ref<string | undefined>("multi-1");
 
       <CodeViewer
         v-model:editMode="editMode"
-        :items="items"
+        :items="viewerItems"
         :color-mode="presentColor"
         :initial-fold="{
           comment: true,

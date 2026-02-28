@@ -7,3 +7,4 @@ export { type ColorMode } from "./color-mode";
 export { type WrapMode } from "./wrap-mode";
 export { type FoldOptions } from "./fold-services";
 export { type Extension } from "@codemirror/state";
+export { type DiagnosticOption, type Diagnostic } from "./lint";

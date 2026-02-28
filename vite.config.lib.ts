@@ -10,6 +10,7 @@ const globals = {
   "@codemirror/lang-python": "CodeMirrorLangPython",
   "@codemirror/lang-rust": "CodeMirrorLangRust",
   "@codemirror/language": "CodeMirrorLanguage",
+  "@codemirror/lint": "CodeMirrorLint",
   "@codemirror/merge": "CodeMirrorMerge",
   "@codemirror/state": "CodeMirrorState",
   "@codemirror/theme-one-dark": "CodeMirrorThemeOneDark",

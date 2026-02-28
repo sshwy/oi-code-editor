@@ -35,6 +35,30 @@ const baseTheme = EditorView.baseTheme({
     justifyContent: "center",
     height: "100%",
   },
+  ".cm-lintRange.cm-lintRange-error": {
+    // a thicker line than the original one
+    // use https://yqnn.github.io/svg-path-editor/ and https://www.svgbackgrounds.com/tools/svg-to-css/ to edit it.
+    backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"><path d="m 0 2.5 l 3 -2 l 1 0 l 3 2 l 1 0" stroke="%23d11" fill="none" stroke-width="2"/></svg>')`,
+    paddingBottom: "2px",
+  },
+  ".cm-lintRange.cm-lintRange-warning": {
+    backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"><path d="m 0 2.5 l 3 -2 l 1 0 l 3 2 l 1 0" stroke="orange" fill="none" stroke-width="2"/></svg>')`,
+    paddingBottom: "2px",
+  },
+  ".cm-lintRange.cm-lintRange-hint": {
+    backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"><path d="m 0 2.5 l 3 -2 l 1 0 l 3 2 l 1 0" stroke="%2366d" fill="none" stroke-width="2"/></svg>')`,
+    paddingBottom: "2px",
+  },
+  ".cm-lintRange.cm-lintRange-info": {
+    backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="4"><path d="m 0 2.5 l 3 -2 l 1 0 l 3 2 l 1 0" stroke="%23999" fill="none" stroke-width="2"/></svg>')`,
+    paddingBottom: "2px",
+  },
+  ".cm-lint-error-line": {
+    backgroundColor: "#dd111140",
+  },
+  ".cm-lint-warning-line": {
+    backgroundColor: "#ffa60040",
+  },
 });
 
 const themeMap = {

@@ -12,6 +12,13 @@ import { colorModes, isSupportedColorMode, type ColorMode } from "./color-mode";
 import { wrapModes, type WrapMode } from "./wrap-mode";
 import { statusPanel, type StatusPanelOptions } from "./status-panel";
 import { foldGutter } from "@codemirror/language";
+import {
+  staticDiagnostics,
+  staticLint,
+  updateStaticDiagnostics,
+  type Diagnostic,
+  type DiagnosticOption,
+} from "./lint";
 
 export interface StateInitOptions {
   /** syntax highlighting language */
@@ -34,6 +41,7 @@ export interface StateInitOptions {
   i18nPhrases?: I18nPhrases;
   /** default folding options. hide the folding gutter if undefined */
   fold?: FoldOptions;
+  diagnostic?: DiagnosticOption;
 }
 
 export interface InitOptions extends StateInitOptions {
@@ -104,6 +112,7 @@ export function useEditorView(el: Element, init: InitOptions) {
               },
             })
           : [],
+        init.diagnostic ? staticLint({ autoPanel: init.diagnostic.autoPanel }) : [],
         colorModes.of(init.color || "light"),
         // make sure vim is included before other keymaps
         editModes.of(init.editMode || "simple"),
@@ -119,6 +128,11 @@ export function useEditorView(el: Element, init: InitOptions) {
 
     if (init.fold) {
       startState = startState.update(foldTrans(startState, init.fold)).state;
+    }
+    if (init.diagnostic) {
+      startState = startState.update(
+        updateStaticDiagnostics(init.diagnostic.diagnostics || []),
+      ).state;
     }
 
     return startState;
@@ -189,6 +203,14 @@ export function useEditorView(el: Element, init: InitOptions) {
     },
     set state(state: EditorState) {
       view.setState(state);
+    },
+    get diagnostics() {
+      if (!init.diagnostic) undefined;
+      return view.state.field(staticDiagnostics, false);
+    },
+    set diagnostics(diagnostics: Diagnostic[] | undefined) {
+      if (!init.diagnostic) return;
+      view.dispatch(updateStaticDiagnostics(diagnostics));
     },
     recreateState(init: StateInitOptions) {
       view.setState(createState(init));

@@ -11,6 +11,7 @@ import {
   type EditMode,
   type ColorMode,
   type Extension,
+  type Diagnostic,
 } from "~/lib";
 import TabsPanel from "./TabsPanel.vue";
 import type { StatusPanelOptions } from "~/lib/status-panel";
@@ -20,6 +21,8 @@ const props = defineProps<{
   editMode?: EditMode;
   comparedContent?: string;
   lang?: LangKind;
+  /** false means disable diagnostics extensions */
+  diagnostics?: Diagnostic[] | false;
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
   editable?: boolean;
@@ -59,6 +62,7 @@ const options: InitOptions = {
   content: props.content || "",
   editMode: props.editMode,
   extensions: props.extraExtensions,
+  diagnostic: props.diagnostics === false ? undefined : { diagnostics: props.diagnostics },
   fold: props.initialFold,
   i18nPhrases: props.i18nPhrases,
   lang: props.lang,
@@ -97,6 +101,7 @@ onMounted(() => {
         i18nPhrases: props.i18nPhrases,
         lang: props.lang,
         statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
+        diagnostic: props.diagnostics === false ? undefined : { diagnostics: props.diagnostics },
         // inherit these settings from previous state
         lineWrap: inst.value.lineWrap,
         editMode: inst.value.editMode,
@@ -118,6 +123,10 @@ onMounted(() => {
 
     if (props.editMode && props.editMode !== old.editMode) {
       inst.value.editMode = props.editMode;
+    }
+
+    if (props.diagnostics !== old.diagnostics) {
+      inst.value.diagnostics = props.diagnostics === false ? undefined : props.diagnostics;
     }
   });
 });

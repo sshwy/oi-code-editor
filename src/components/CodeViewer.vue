@@ -1,17 +1,29 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { ColorMode, EditMode, Extension, FoldOptions, I18nPhrases, LangKind } from "~/lib";
+import type {
+  ColorMode,
+  Diagnostic,
+  EditMode,
+  Extension,
+  FoldOptions,
+  I18nPhrases,
+  LangKind,
+} from "~/lib";
 import CodeViewerBase from "./CodeViewerBase.vue";
 
+export type ViewerItem = {
+  id: string;
+  label: string;
+  content: string;
+  lang?: LangKind;
+  comparedContent?: string;
+  tabClassList?: string[];
+  diagnostics?: Diagnostic[];
+};
+
 const props = defineProps<{
-  items: {
-    id: string;
-    label: string;
-    content: string;
-    lang?: LangKind;
-    comparedContent?: string;
-    tabClassList?: string[];
-  }[];
+  items: ViewerItem[];
+  disableDiagnostics?: boolean;
   noTabs?: boolean;
   noStatusPanel?: boolean;
   lineWrap?: boolean;
@@ -30,13 +42,15 @@ const safeActiveId = computed<string | undefined>(() => {
   if (activeId.value === undefined) return props.items[0]?.id;
   return activeId.value;
 });
-const activeItem = computed(
+const activeItem = computed<ViewerItem>(
   () =>
     props.items.find((item) => item.id === safeActiveId.value) || {
       id: "_empty",
+      label: "<empty>",
       content: "<empty>",
       lang: undefined,
       comparedContent: undefined,
+      diagnostics: undefined,
     },
 );
 
@@ -66,5 +80,6 @@ const tabs = computed(() =>
     :initial-fold
     :i18n-phrases
     :extra-extensions
+    :diagnostics="disableDiagnostics ? false : activeItem.diagnostics"
   />
 </template>
