@@ -1,3 +1,19 @@
+## [0.9.0] - 2026-03-02
+
+### 🚀 Features
+
+- Enhance diagnostics support in CodeEditor2 and App components with structured diagnostic data
+
+### 🚜 Refactor
+
+- Simplify tab state management in CodeEditor2 component
+- Update diagnostics handling in CodeViewer components to use undefined and empty array for better clarity
+- Rename MultiTabDoc to TabDoc for improved clarity in CodeEditor2 component
+- Move TabDoc interface definition to tabs.ts for better organization and clarity
+- Remove hardcoded bottom style from CodeEditor2 and CodeViewerBase components, and manage it through CSS in color-mode and status-panel for improved flexibility
+- Update CodeEditor2 component to use statusPanel prop for improved flexibility and remove hardcoded status panel options
+- Streamline diagnostics integration in App and CodeViewer components by centralizing diagnostic data management
+
 ## [0.8.0] - 2026-02-28
 
 ### 🚀 Features
