@@ -1,4 +1,4 @@
-import { linter, type Diagnostic, type LintSource } from "@codemirror/lint";
+import { linter, setDiagnosticsEffect, type Diagnostic, type LintSource } from "@codemirror/lint";
 import { RangeSetBuilder, StateEffect, StateField, type TransactionSpec } from "@codemirror/state";
 import {
   Decoration,
@@ -23,7 +23,7 @@ export const staticDiagnostics = StateField.define<Diagnostic[]>({
 
 export const updateStaticDiagnostics = (diagnostics: Diagnostic[]): TransactionSpec => {
   return {
-    effects: setStaticDiagnosticsEffect.of(diagnostics),
+    effects: [setStaticDiagnosticsEffect.of(diagnostics), setDiagnosticsEffect.of(diagnostics)],
   };
 };
 
@@ -70,7 +70,10 @@ const showLintLineDeco = ViewPlugin.fromClass(
     }
 
     update(update: ViewUpdate) {
-      if (update.docChanged || update.viewportChanged)
+      const diagnosticsChanged = update.transactions.some((t) =>
+        t.effects.some((e) => e.is(setDiagnosticsEffect)),
+      );
+      if (update.docChanged || update.viewportChanged || diagnosticsChanged)
         this.decorations = staticDiagnosticLineDeco(update.view);
     }
   },
