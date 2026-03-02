@@ -16,7 +16,7 @@ import {
 import TabsPanel from "./TabsPanel.vue";
 import type { StatusPanelOptions } from "~/lib/status-panel";
 
-interface MultiTabDoc {
+interface TabDoc {
   id: string;
   label: string;
   content: string;
@@ -36,7 +36,7 @@ const props = defineProps<{
   initialLineWrap?: boolean;
 }>();
 
-const tabsModel = defineModel<MultiTabDoc[]>({ required: true });
+const tabsModel = defineModel<TabDoc[]>({ required: true });
 const activeTab = defineModel<string | undefined>("activeTab");
 const editMode = defineModel<EditMode>("editMode");
 
@@ -61,7 +61,7 @@ const statusPanelOptions: StatusPanelOptions = {
 
 const headerTabs = computed(() => tabsModel.value.map<TabItem>(({ id, label }) => ({ id, label })));
 
-const getActiveDoc = (tabs: MultiTabDoc[], id: string | undefined) => {
+const getActiveDoc = (tabs: TabDoc[], id: string | undefined) => {
   if (!tabs.length) return undefined;
   if (id) {
     const found = tabs.find((t) => t.id === id);
@@ -93,7 +93,7 @@ const handleUpdate = (info: ViewUpdateInfo) => {
   }
 };
 
-const createStateInitForTab = (tab: MultiTabDoc): StateInitOptions => ({
+const createStateInitForTab = (tab: TabDoc): StateInitOptions => ({
   color: props.colorMode,
   comparedContent: tab.comparedContent,
   content: tab.content,
@@ -144,7 +144,7 @@ onMounted(() => {
 
       // invalidate removed or changed non-active tab states
       if (oldTabs) {
-        const oldById = new Map<string, MultiTabDoc>(oldTabs.map((t) => [t.id, t]));
+        const oldById = new Map<string, TabDoc>(oldTabs.map((t) => [t.id, t]));
         for (const tab of tabs) {
           const prev = oldById.get(tab.id);
           if (!prev) continue;
