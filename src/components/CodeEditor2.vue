@@ -22,7 +22,7 @@ const props = defineProps<{
   lang?: LangKind;
   colorMode?: ColorMode;
   i18nPhrases?: I18nPhrases;
-  noStatusPanel?: boolean;
+  statusPanel?: StatusPanelOptions;
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
   initialFold?: FoldOptions;
@@ -33,23 +33,11 @@ const tabsModel = defineModel<TabDoc[]>({ required: true });
 const activeTab = defineModel<string | undefined>("activeTab");
 const editMode = defineModel<EditMode>("editMode");
 
-const emit = defineEmits<{
-  bottomPanelMount: [el: HTMLElement];
-}>();
-
 const editorRoot = useTemplateRef("editorRoot");
 const inst = ref<EditorInstance>();
 
 type EditorStateLike = EditorInstance["state"];
 const tabStates = new Map<string, EditorStateLike>();
-
-const statusPanelOptions: StatusPanelOptions = {
-  onMount() {
-    const panelWrapper = this.dom.parentElement;
-    if (!panelWrapper) return;
-    emit("bottomPanelMount", panelWrapper);
-  },
-};
 
 const headerTabs = computed(() => tabsModel.value.map<TabItem>(({ id, label }) => ({ id, label })));
 
@@ -93,7 +81,7 @@ const createStateInitForTab = (tab: TabDoc): StateInitOptions => ({
   fold: props.initialFold,
   i18nPhrases: props.i18nPhrases,
   lang: tab.lang ?? props.lang,
-  statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
+  statusPanel: props.statusPanel,
   // inherit run-time settings if available
   lineWrap: inst.value?.lineWrap ?? (props.initialLineWrap ? "wrap" : "nowrap"),
   editMode: editMode.value ?? inst.value?.editMode,

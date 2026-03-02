@@ -178,6 +178,7 @@ const multiActiveTab = ref<string | undefined>("multi-1");
           vim_mode: 'Vim 模式',
         }"
         :initial-fold="{}"
+        :status-panel="{}"
       />
 
       <p>Multi-tab model value:</p>
