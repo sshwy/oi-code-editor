@@ -120,6 +120,9 @@ export const createStatusPanel = (view: EditorView): Panel => {
     },
     mount() {
       const fn = view.state.facet(statusPanelOnMountFacet);
+      const el = this.dom.parentElement;
+      // use class to control the bottom position
+      if (el) el.style.bottom = "";
       fn?.call(this);
     },
   };

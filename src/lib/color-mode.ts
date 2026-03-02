@@ -17,6 +17,9 @@ const baseTheme = EditorView.baseTheme({
   ".cm-panel.cm-panel-lint ul": {
     fontSize: "13px",
   },
+  ".cm-panels.cm-panels-bottom": {
+    bottom: "var(--oce-status-panel-bottom, 0px)",
+  },
   "&dark .cm-panel.cm-panel-lint ul:focus [aria-selected]": {
     backgroundColor: "#333945",
     color: "white",

@@ -47,7 +47,6 @@ const statusPanelOptions: StatusPanelOptions = {
   onMount() {
     const panelWrapper = this.dom.parentElement;
     if (!panelWrapper) return;
-    panelWrapper.style.bottom = "var(--oce-status-panel-bottom, 0px)";
     emit("bottomPanelMount", panelWrapper);
   },
 };
