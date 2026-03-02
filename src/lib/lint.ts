@@ -10,12 +10,12 @@ import {
   type EditorView,
 } from "@codemirror/view";
 
-const setStaticDiagnostics = StateEffect.define<Diagnostic[] | undefined>();
-export const staticDiagnostics = StateField.define<Diagnostic[] | undefined>({
-  create: () => undefined,
+const setStaticDiagnosticsEffect = StateEffect.define<Diagnostic[]>();
+export const staticDiagnostics = StateField.define<Diagnostic[]>({
+  create: () => [],
   update: (value, transaction) => {
     transaction.effects.forEach((e) => {
-      if (e.is(setStaticDiagnostics)) {
+      if (e.is(setStaticDiagnosticsEffect)) {
         value = e.value;
       }
     });
@@ -23,14 +23,9 @@ export const staticDiagnostics = StateField.define<Diagnostic[] | undefined>({
   },
 });
 
-const staticLintSource: LintSource = async (view) => {
-  const diagnostics = view.state.field(staticDiagnostics);
-  return diagnostics || [];
-};
-
-export const updateStaticDiagnostics = (diagnostics: Diagnostic[] | undefined): TransactionSpec => {
+export const updateStaticDiagnostics = (diagnostics: Diagnostic[]): TransactionSpec => {
   return {
-    effects: setStaticDiagnostics.of(diagnostics),
+    effects: setStaticDiagnosticsEffect.of(diagnostics),
   };
 };
 
@@ -85,6 +80,11 @@ const showLintLineDeco = ViewPlugin.fromClass(
     decorations: (v) => v.decorations,
   },
 );
+
+const staticLintSource: LintSource = (view) => {
+  const diagnostics = view.state.field(staticDiagnostics);
+  return diagnostics || [];
+};
 
 export const staticLint = (options: Omit<DiagnosticOption, "diagnostics">) => [
   staticDiagnostics,

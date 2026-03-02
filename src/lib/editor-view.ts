@@ -19,6 +19,7 @@ import {
   type Diagnostic,
   type DiagnosticOption,
 } from "./lint";
+import { forceLinting } from "@codemirror/lint";
 
 export interface StateInitOptions {
   /** syntax highlighting language */
@@ -206,11 +207,12 @@ export function useEditorView(el: Element, init: InitOptions) {
     },
     get diagnostics() {
       if (!init.diagnostic) undefined;
-      return view.state.field(staticDiagnostics, false);
+      return view.state.field(staticDiagnostics);
     },
-    set diagnostics(diagnostics: Diagnostic[] | undefined) {
+    set diagnostics(diagnostics: Diagnostic[]) {
       if (!init.diagnostic) return;
       view.dispatch(updateStaticDiagnostics(diagnostics));
+      forceLinting(view);
     },
     recreateState(init: StateInitOptions) {
       view.setState(createState(init));

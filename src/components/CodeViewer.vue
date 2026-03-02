@@ -80,6 +80,6 @@ const tabs = computed(() =>
     :initial-fold
     :i18n-phrases
     :extra-extensions
-    :diagnostics="disableDiagnostics ? false : activeItem.diagnostics"
+    :diagnostics="disableDiagnostics ? undefined : activeItem.diagnostics"
   />
 </template>
