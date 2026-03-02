@@ -1,3 +1,9 @@
+## [0.9.1] - 2026-03-02
+
+### 🐛 Bug Fixes
+
+- Track setDiagnosticsEffect for eager diagnostic updates
+
 ## [0.9.0] - 2026-03-02
 
 ### 🚀 Features
