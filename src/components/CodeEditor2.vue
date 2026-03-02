@@ -12,17 +12,10 @@ import {
   type ViewUpdateInfo,
   type TabItem,
   type StateInitOptions,
+  type TabDoc,
 } from "~/lib";
 import TabsPanel from "./TabsPanel.vue";
 import type { StatusPanelOptions } from "~/lib/status-panel";
-
-interface TabDoc {
-  id: string;
-  label: string;
-  content: string;
-  lang?: LangKind;
-  comparedContent?: string;
-}
 
 const props = defineProps<{
   /** default language when tab.lang is not provided */
