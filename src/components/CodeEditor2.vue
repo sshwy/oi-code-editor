@@ -11,6 +11,7 @@ import {
   type Extension,
   type ViewUpdateInfo,
   type TabItem,
+  type StateInitOptions,
 } from "~/lib";
 import TabsPanel from "./TabsPanel.vue";
 import type { StatusPanelOptions } from "~/lib/status-panel";
@@ -92,7 +93,7 @@ const handleUpdate = (info: ViewUpdateInfo) => {
   }
 };
 
-const createStateInitForTab = (tab: MultiTabDoc) => ({
+const createStateInitForTab = (tab: MultiTabDoc): StateInitOptions => ({
   color: props.colorMode,
   comparedContent: tab.comparedContent,
   content: tab.content,
@@ -143,10 +144,8 @@ onMounted(() => {
 
       // invalidate removed or changed non-active tab states
       if (oldTabs) {
-        const oldById = new Map<string, MultiTabDoc>(
-          (oldTabs as MultiTabDoc[]).map((t) => [t.id, t]),
-        );
-        for (const tab of tabs as MultiTabDoc[]) {
+        const oldById = new Map<string, MultiTabDoc>(oldTabs.map((t) => [t.id, t]));
+        for (const tab of tabs) {
           const prev = oldById.get(tab.id);
           if (!prev) continue;
           if (tab.id === activeId) continue;
@@ -159,7 +158,7 @@ onMounted(() => {
           }
         }
         for (const id of Array.from(tabStates.keys())) {
-          if (!(tabs as MultiTabDoc[]).some((t) => t.id === id)) {
+          if (!tabs.some((t) => t.id === id)) {
             tabStates.delete(id);
           }
         }
@@ -170,7 +169,7 @@ onMounted(() => {
         inst.value.colorMode = newProps.colorMode;
       }
 
-      const oldCurrent = oldTabs ? getActiveDoc(oldTabs as MultiTabDoc[], oldActiveId) : undefined;
+      const oldCurrent = oldTabs ? getActiveDoc(oldTabs, oldActiveId) : undefined;
 
       const newLang = current.lang ?? newProps.lang;
       const oldLang = oldCurrent?.lang ?? oldProps?.lang;
