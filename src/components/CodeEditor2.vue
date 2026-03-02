@@ -13,6 +13,7 @@ import {
   type TabItem,
   type StateInitOptions,
   type TabDoc,
+  type TabDiagnostic,
 } from "~/lib";
 import TabsPanel from "./TabsPanel.vue";
 import type { StatusPanelOptions } from "~/lib/status-panel";
@@ -27,6 +28,7 @@ const props = defineProps<{
   extraExtensions?: Extension;
   initialFold?: FoldOptions;
   initialLineWrap?: boolean;
+  diagnostics?: TabDiagnostic[];
 }>();
 
 const tabsModel = defineModel<TabDoc[]>({ required: true });
@@ -85,6 +87,11 @@ const createStateInitForTab = (tab: TabDoc): StateInitOptions => ({
   // inherit run-time settings if available
   lineWrap: inst.value?.lineWrap ?? (props.initialLineWrap ? "wrap" : "nowrap"),
   editMode: editMode.value ?? inst.value?.editMode,
+  diagnostic: props.diagnostics
+    ? {
+        diagnostics: props.diagnostics.filter((d) => d.tabId === tab.id),
+      }
+    : undefined,
 });
 
 onMounted(() => {
@@ -201,6 +208,19 @@ onMounted(() => {
       if (!inst.value) return;
       if (mode && mode !== old) {
         inst.value.editMode = mode;
+      }
+    },
+    { flush: "post" },
+  );
+
+  watch(
+    [activeTab, () => props.diagnostics],
+    ([activeTab, diagnostics]) => {
+      if (!inst.value) return;
+      if (diagnostics) {
+        const filtered = diagnostics.filter((d) => d.tabId === activeTab);
+        console.debug("set diagnostics for", activeTab, filtered);
+        inst.value.diagnostics = filtered;
       }
     },
     { flush: "post" },

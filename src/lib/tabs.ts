@@ -1,4 +1,5 @@
 import type { LangKind } from "./language-supports";
+import type { Diagnostic } from "./lint";
 
 export interface TabItem {
   // unique identifier for the tab
@@ -21,4 +22,8 @@ export interface TabDoc {
   content: string;
   lang?: LangKind;
   comparedContent?: string;
+}
+
+export interface TabDiagnostic extends Diagnostic {
+  tabId: string;
 }

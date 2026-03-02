@@ -179,6 +179,40 @@ const multiActiveTab = ref<string | undefined>("multi-1");
         }"
         :initial-fold="{}"
         :status-panel="{}"
+        :diagnostics="[
+          {
+            tabId: 'multi-1',
+            from: 7,
+            to: 30,
+            severity: 'error',
+            message: 'Error message',
+            source: 'Manual',
+          },
+          {
+            tabId: 'multi-1',
+            from: 300,
+            to: 305,
+            severity: 'warning',
+            message: 'Warning message',
+            source: 'Manual',
+          },
+          {
+            tabId: 'multi-2',
+            from: 310,
+            to: 315,
+            severity: 'hint',
+            message: 'Hint message',
+            source: 'Manual',
+          },
+          {
+            tabId: 'multi-2',
+            from: 340,
+            to: 345,
+            severity: 'info',
+            message: 'info message',
+            source: 'Manual',
+          },
+        ]"
       />
 
       <p>Multi-tab model value:</p>
