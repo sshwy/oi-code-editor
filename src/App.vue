@@ -8,12 +8,48 @@ import fwtAndText from "~/assets/fwt_and.cpp?raw";
 import fwtOrText from "~/assets/fwt_or.cpp?raw";
 import { useColorMode } from "@vueuse/core";
 import { computed, ref } from "vue";
-import type { EditMode } from "~/lib";
+import type { EditMode, TabDiagnostic } from "~/lib";
 import type { ViewerItem } from "./components/CodeViewer.vue";
 
 const color = useColorMode();
 color.value = "auto";
 const presentColor = computed(() => color.value as "light" | "dark");
+
+const diagnostics: TabDiagnostic[] = (
+  [
+    {
+      from: 7,
+      to: 30,
+      severity: "error",
+      message: "Error message",
+      source: "Manual",
+    },
+
+    {
+      from: 300,
+      to: 305,
+      severity: "warning",
+      message: "Warning message",
+      source: "Manual",
+    },
+
+    {
+      from: 310,
+      to: 315,
+      severity: "hint",
+      message: "Hint message",
+      source: "Manual",
+    },
+
+    {
+      from: 340,
+      to: 345,
+      severity: "info",
+      message: "info message",
+      source: "Manual",
+    },
+  ] as const
+).map((o) => ({ ...o, tabId: "1" }));
 
 const viewerItems: ViewerItem[] = [
   {
@@ -21,39 +57,6 @@ const viewerItems: ViewerItem[] = [
     label: "dmst.cpp",
     content: dmstText,
     lang: "cpp" as const,
-    diagnostics: [
-      {
-        from: 7,
-        to: 30,
-        severity: "error",
-        message: "Error message",
-        source: "Manual",
-      },
-
-      {
-        from: 300,
-        to: 305,
-        severity: "warning",
-        message: "Warning message",
-        source: "Manual",
-      },
-
-      {
-        from: 310,
-        to: 315,
-        severity: "hint",
-        message: "Hint message",
-        source: "Manual",
-      },
-
-      {
-        from: 340,
-        to: 345,
-        severity: "info",
-        message: "info message",
-        source: "Manual",
-      },
-    ],
   },
   {
     id: "2",
@@ -161,6 +164,7 @@ const multiActiveTab = ref<string | undefined>("multi-1");
           using: true,
           typedef: true,
         }"
+        :diagnostics="diagnostics"
       />
 
       <p>Multi-tab code editor demo:</p>

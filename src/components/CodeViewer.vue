@@ -2,12 +2,12 @@
 import { computed } from "vue";
 import type {
   ColorMode,
-  Diagnostic,
   EditMode,
   Extension,
   FoldOptions,
   I18nPhrases,
   LangKind,
+  TabDiagnostic,
 } from "~/lib";
 import CodeViewerBase from "./CodeViewerBase.vue";
 
@@ -18,12 +18,10 @@ export type ViewerItem = {
   lang?: LangKind;
   comparedContent?: string;
   tabClassList?: string[];
-  diagnostics?: Diagnostic[];
 };
 
 const props = defineProps<{
   items: ViewerItem[];
-  disableDiagnostics?: boolean;
   noTabs?: boolean;
   noStatusPanel?: boolean;
   lineWrap?: boolean;
@@ -32,6 +30,8 @@ const props = defineProps<{
   i18nPhrases?: I18nPhrases;
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
+  /** diagnostics information. undefined means disable diagnostics extensions */
+  diagnostics?: TabDiagnostic[];
 }>();
 
 const editMode = defineModel<EditMode>("editMode");
@@ -80,6 +80,6 @@ const tabs = computed(() =>
     :initial-fold
     :i18n-phrases
     :extra-extensions
-    :diagnostics="disableDiagnostics ? undefined : activeItem.diagnostics"
+    :diagnostics="diagnostics?.filter((d) => d.tabId === activeItem.id)"
   />
 </template>

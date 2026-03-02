@@ -1,5 +1,3 @@
-// https://gcc.gnu.org/onlinedocs/gcc-13.1.0/gcc/Diagnostic-Message-Formatting-Options.html
-
 import { linter, type Diagnostic, type LintSource } from "@codemirror/lint";
 import { RangeSetBuilder, StateEffect, StateField, type TransactionSpec } from "@codemirror/state";
 import {
