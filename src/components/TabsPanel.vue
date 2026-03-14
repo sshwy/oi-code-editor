@@ -15,7 +15,7 @@ const activeTab = defineModel<string | undefined>({ required: true });
       :class="['code-viewer-tab-item', activeTab === item.id ? 'code-viewer-tab-item-active' : '']"
       @click="activeTab = item.id"
     >
-      {{ item.label }}
+      <slot name="item" :item>{{ item.label }}</slot>
     </div>
   </div>
 </template>
