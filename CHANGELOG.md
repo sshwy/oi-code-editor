@@ -1,3 +1,8 @@
+## [0.11.0] - 2026-03-14
+
+### 🚀 Features
+
+- *(code-editor)* Expose tab item slot for header tabs
 ## [0.10.0] - 2026-03-14
 
 ### 🚀 Features
