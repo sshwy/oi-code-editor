@@ -1,9 +1,13 @@
+## [0.10.0] - 2026-03-14
+
+### 🚀 Features
+
+- *(tabs-panel)* Allow custom tab item rendering
 ## [0.9.1] - 2026-03-02
 
 ### 🐛 Bug Fixes
 
 - Track setDiagnosticsEffect for eager diagnostic updates
-
 ## [0.9.0] - 2026-03-02
 
 ### 🚀 Features
@@ -19,7 +23,6 @@
 - Remove hardcoded bottom style from CodeEditor2 and CodeViewerBase components, and manage it through CSS in color-mode and status-panel for improved flexibility
 - Update CodeEditor2 component to use statusPanel prop for improved flexibility and remove hardcoded status panel options
 - Streamline diagnostics integration in App and CodeViewer components by centralizing diagnostic data management
-
 ## [0.8.0] - 2026-02-28
 
 ### 🚀 Features
@@ -31,7 +34,6 @@
 
 - Rename codemirrorGlobals to globals and simplify external dependencies configuration
 - Update state management in CodeViewerBase and editor-view components
-
 ## [0.7.0] - 2026-01-23
 
 ### 🚀 Features
@@ -41,7 +43,6 @@
 ### 🐛 Bug Fixes
 
 - Set default value for header height and font family if css var not presented
-
 ## [0.6.0] - 2026-01-07
 
 ### 🚀 Features
@@ -52,13 +53,11 @@
 
 - Add overflow-x and white-space properties to TabsPanel for improved tab layout
 - Add overflow-x and white-space properties to status panel for improved layout
-
 ## [0.5.1] - 2026-01-06
 
 ### 🐛 Bug Fixes
 
 - Move style entry to the main fields in package.json
-
 ## [0.5.0] - 2026-01-06
 
 ### 🚀 Features
@@ -69,7 +68,6 @@
 ### 🚜 Refactor
 
 - Enhance CodeViewerBase and editor-view to support customizable folding options
-
 ## [0.4.0] - 2026-01-06
 
 ### 🚀 Features
@@ -114,7 +112,6 @@
 
 - Add model value display in App.vue for enhanced user feedback
 - Format code
-
 ## [0.3.2] - 2026-01-02
 
 ### 🐛 Bug Fixes
@@ -124,7 +121,6 @@
 ### ⚙️ Miscellaneous Tasks
 
 - Add git-cliff configuration for changelog generation
-
 ## [0.3.1] - 2026-01-02
 
 ### 🐛 Bug Fixes
@@ -135,7 +131,6 @@
 ### ⚙️ Miscellaneous Tasks
 
 - Add .cursor to .gitignore
-
 ## [0.3.0] - 2026-01-02
 
 ### 🚀 Features
@@ -157,7 +152,6 @@
 - Update type definitions and include paths in package.json and tsconfig.lib.json
 - Reorganize dependencies in package.json and pnpm-lock.yaml, and add CodeMirror globals in vite.config.lib.ts
 - Sync edit mode in demo page
-
 ## [0.2.1] - 2026-01-01
 
 ### 🚜 Refactor
@@ -174,7 +168,6 @@
 - Add code compare example
 - Remove unused VSCode extensions configuration
 - Update dependencies and improve theme imports in package.json and editor-view.ts
-
 ## [0.2.0] - 2026-01-01
 
 ### 🚀 Features
@@ -204,7 +197,6 @@
 - Rename package to @sshwy/oi-code-editor and update publish command in workflow
 - Add homepage URL to package.json
 - Add license information and include LICENSE file in package.json
-
 ## [0.1.0] - 2026-01-01
 
 ### 🚀 Features
@@ -235,7 +227,7 @@
 - Update package configuration and enhance type definitions
 - Update library entry point and restructure exports in components
 - Format code
-- _(ci)_ Update GitHub Actions workflow to install Node.js version 25 and adjust pnpm setup
+- *(ci)* Update GitHub Actions workflow to install Node.js version 25 and adjust pnpm setup
 - Update Vite configuration base path and format pnpm cache setting in GitHub Actions workflow
 - Add .gitattributes file to mark assets as vendored
 - Add GitHub Actions workflow for publishing NPM library on release branch
