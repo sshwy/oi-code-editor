@@ -230,7 +230,9 @@ onMounted(() => {
 
 <template>
   <div>
-    <TabsPanel v-if="tabsModel.length" :tabs="headerTabs" v-model="activeTab" />
+    <TabsPanel v-if="tabsModel.length" :tabs="headerTabs" v-model="activeTab">
+      <template #item="{ item }"><slot name="tab-item" :item="item" /></template>
+    </TabsPanel>
     <div
       v-else
       class="code-viewer-tab-panel border border-dashed border-slate-300 dark:border-slate-700 px-3 py-2 text-sm text-slate-500 dark:text-slate-400"
