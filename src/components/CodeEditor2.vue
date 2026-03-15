@@ -193,6 +193,7 @@ onMounted(() => {
       const cached = tabStates.get(newDoc.id);
       if (cached) {
         inst.value.state = cached;
+        inst.value.lang = newDoc.lang ?? props.lang;
       } else {
         inst.value.recreateState(createStateInitForTab(newDoc));
         tabStates.set(newDoc.id, inst.value.state);

@@ -182,6 +182,7 @@ export function useEditorView(el: Element, init: InitOptions) {
       return langSupports.read(view.state);
     },
     set lang(lang: LangKind | undefined) {
+      console.debug('set lang', lang);
       if (isSupportedLanguage(lang)) {
         view.dispatch({
           effects: langSupports.reconfigure(lang),
@@ -203,6 +204,7 @@ export function useEditorView(el: Element, init: InitOptions) {
       return view.state;
     },
     set state(state: EditorState) {
+      console.debug('set state', state);
       view.setState(state);
     },
     get diagnostics() {
