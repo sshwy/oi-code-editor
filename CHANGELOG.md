@@ -1,3 +1,8 @@
+## [0.11.1] - 2026-03-15
+
+### 🐛 Bug Fixes
+
+- *(CodeEditor2)* Ensure language is set correctly on tab state restoration
 ## [0.11.0] - 2026-03-14
 
 ### 🚀 Features
