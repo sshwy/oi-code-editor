@@ -1,3 +1,13 @@
+## [0.12.0] - 2026-03-20
+
+### 🚀 Features
+
+- _(code-editor2)_ Add reactive readonly prop and runtime switching
+
+### ⚙️ Miscellaneous Tasks
+
+- _(codemirror)_ Bump CodeMirror package versions
+
 ## [0.11.1] - 2026-03-15
 
 ### 🐛 Bug Fixes
