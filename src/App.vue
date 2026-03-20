@@ -140,6 +140,8 @@ const ds = [
     source: "Manual",
   },
 ] satisfies TabDiagnostic[];
+
+const readonly = ref(false);
 </script>
 
 <template>
@@ -205,9 +207,15 @@ const ds = [
 
       <p>Multi-tab code editor demo:</p>
 
-      <button @click="diagnosticsRef = ds" class="bg-blue-500 text-white cursor-pointer">
+      <button
+        @click="diagnosticsRef = ds"
+        class="p-2 rounded-md shadow-xs bg-blue-500 text-white cursor-pointer"
+      >
         Set Diagnostics
       </button>
+
+      <input class="m-2" type="checkbox" v-model="readonly" id="readonly" />
+      <label for="readonly">Readonly</label>
 
       <CodeEditor2
         v-model="multiTabs"
@@ -223,6 +231,7 @@ const ds = [
         }"
         :initial-fold="{}"
         :status-panel="{}"
+        :readonly="readonly"
         :diagnostics="diagnosticsRef"
       />
 

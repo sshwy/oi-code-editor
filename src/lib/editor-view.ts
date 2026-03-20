@@ -24,6 +24,8 @@ import { forceLinting } from "@codemirror/lint";
 export interface StateInitOptions {
   /** syntax highlighting language */
   lang?: LangKind;
+  /** whether the editor is readonly */
+  readonly?: boolean;
   /** whether to enable vim mode */
   editMode?: EditMode;
   /** whether to wrap the lines */
@@ -48,8 +50,6 @@ export interface StateInitOptions {
 export interface InitOptions extends StateInitOptions {
   /** callback when the editor state changes */
   onUpdate?: (info: ViewUpdateInfo) => void;
-  /** whether the editor is readonly */
-  readonly?: boolean;
 }
 
 export interface ViewUpdateInfo {
@@ -88,9 +88,12 @@ const mergeViewCompart = new Compartment();
 
 // Create a code editor view on the given element and items.
 export function useEditorView(el: Element, init: InitOptions) {
-  const extraExt = init.readonly
-    ? viewerSetup
-    : [editorSetup, init.onUpdate ? watchUpdate(init.onUpdate) : []];
+  const readonlyModeCompart = new Compartment();
+
+  const getReadonlyModeExt = (readonly: boolean): Extension =>
+    readonly
+      ? viewerSetup
+      : [...editorSetup, ...(init.onUpdate ? [watchUpdate(init.onUpdate)] : [])];
 
   const createState = (init: StateInitOptions): EditorState => {
     let startState = EditorState.create({
@@ -120,7 +123,7 @@ export function useEditorView(el: Element, init: InitOptions) {
         wrapModes.of(init.lineWrap || "nowrap"),
         mergeViewCompart.of(createMergeView(init.comparedContent)),
         langSupports.of(init.lang || "text"),
-        extraExt,
+        readonlyModeCompart.of(getReadonlyModeExt(!!init.readonly)),
         init.statusPanel ? statusPanel(init.statusPanel) : [],
         init.i18nPhrases ? i18nFacet.of(init.i18nPhrases) : [],
         init.extensions || [],
@@ -150,6 +153,15 @@ export function useEditorView(el: Element, init: InitOptions) {
     view,
     get doc() {
       return view.state.doc;
+    },
+    get readonly() {
+      return view.state.readOnly;
+    },
+    set readonly(readonly: boolean) {
+      if (view.state.readOnly === readonly) return;
+      view.dispatch({
+        effects: readonlyModeCompart.reconfigure(getReadonlyModeExt(readonly)),
+      });
     },
     get colorMode() {
       return colorModes.read(view.state);
@@ -182,7 +194,7 @@ export function useEditorView(el: Element, init: InitOptions) {
       return langSupports.read(view.state);
     },
     set lang(lang: LangKind | undefined) {
-      console.debug('set lang', lang);
+      console.debug("set lang", lang);
       if (isSupportedLanguage(lang)) {
         view.dispatch({
           effects: langSupports.reconfigure(lang),
@@ -204,7 +216,7 @@ export function useEditorView(el: Element, init: InitOptions) {
       return view.state;
     },
     set state(state: EditorState) {
-      console.debug('set state', state);
+      console.debug("set state", state);
       view.setState(state);
     },
     get diagnostics() {

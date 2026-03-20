@@ -24,6 +24,8 @@ const props = defineProps<{
   colorMode?: ColorMode;
   i18nPhrases?: I18nPhrases;
   statusPanel?: StatusPanelOptions;
+  /** whether the editor is readonly */
+  readonly?: boolean;
   /** additional editor extensions (not reactive) */
   extraExtensions?: Extension;
   initialFold?: FoldOptions;
@@ -68,7 +70,8 @@ const updateActiveTabContent = (newContent: string) => {
 const handleUpdate = (info: ViewUpdateInfo) => {
   if (!info.update.state.doc.eq(info.update.startState.doc)) {
     const content = info.update.state.doc.toString();
-    updateActiveTabContent(content);
+    // In readonly mode, editor content should not be written back.
+    if (!props.readonly) updateActiveTabContent(content);
   }
   if (info.editMode && editMode.value !== info.editMode) {
     editMode.value = info.editMode;
@@ -79,6 +82,7 @@ const createStateInitForTab = (tab: TabDoc): StateInitOptions => ({
   color: props.colorMode,
   comparedContent: tab.comparedContent,
   content: tab.content,
+  readonly: props.readonly ?? false,
   extensions: props.extraExtensions,
   fold: props.initialFold,
   i18nPhrases: props.i18nPhrases,
@@ -123,7 +127,6 @@ onMounted(() => {
         inst.value = useEditorView(editorRoot.value, {
           ...createStateInitForTab(current),
           onUpdate: handleUpdate,
-          readonly: false,
         });
         tabStates.set(current.id, inst.value.state);
         return;
@@ -148,6 +151,22 @@ onMounted(() => {
           if (!tabs.some((t) => t.id === id)) {
             tabStates.delete(id);
           }
+        }
+      }
+
+      // runtime readonly sync
+      const newReadonly = !!newProps.readonly;
+      if (inst.value.readonly !== newReadonly) {
+        inst.value.readonly = newReadonly;
+      }
+
+      // when readonly, treat external tabsModel content as source of truth
+      if (newReadonly && activeId === oldActiveId) {
+        const expected = current.content;
+        const actual = inst.value.doc.toString();
+        if (expected !== actual) {
+          inst.value.recreateState(createStateInitForTab(current));
+          tabStates.set(current.id, inst.value.state);
         }
       }
 
@@ -178,6 +197,7 @@ onMounted(() => {
     activeTab,
     (newId, oldId) => {
       if (!inst.value) return;
+      const newReadonly = !!props.readonly;
       const tabs = tabsModel.value;
       if (!tabs.length) return;
 
@@ -191,7 +211,7 @@ onMounted(() => {
       if (!newDoc) return;
 
       const cached = tabStates.get(newDoc.id);
-      if (cached) {
+      if (cached && cached.readOnly === newReadonly) {
         inst.value.state = cached;
         inst.value.lang = newDoc.lang ?? props.lang;
       } else {

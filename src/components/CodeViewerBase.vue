@@ -99,6 +99,7 @@ onMounted(() => {
         fold: props.initialFold,
         i18nPhrases: props.i18nPhrases,
         lang: props.lang,
+        readonly: !props.editable,
         statusPanel: props.noStatusPanel ? undefined : statusPanelOptions,
         diagnostic: props.diagnostics ? { diagnostics: props.diagnostics } : undefined,
         // inherit these settings from previous state
