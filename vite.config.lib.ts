@@ -22,13 +22,13 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      "~": resolve(__dirname, "./src"),
+      "~": resolve(import.meta.dirname, "./src"),
     },
   },
   publicDir: false,
   build: {
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: resolve(import.meta.dirname, "src/index.ts"),
       name: "OiCodeEditor",
       fileName: "oi-code-editor",
     },
