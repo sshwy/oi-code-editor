@@ -1,0 +1,10 @@
+# contest config
+title = "Euclideanoid"
+time_limit = 2.0
+memory_mb = 256
+interactive = false
+tags = ["math", "number-theory"]
+
+[checker]
+lang = "cpp"
+path = "chk.cpp"

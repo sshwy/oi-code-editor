@@ -6,6 +6,7 @@ import ratingText from "~/assets/rating.rs?raw";
 import euclideanoidText from "~/assets/euclideanoid.cpp?raw";
 import fwtAndText from "~/assets/fwt_and.cpp?raw";
 import fwtOrText from "~/assets/fwt_or.cpp?raw";
+import configTomlText from "~/assets/config.toml?raw";
 import { useColorMode } from "@vueuse/core";
 import { computed, ref } from "vue";
 import type { EditMode, TabDiagnostic } from "~/lib";
@@ -76,6 +77,12 @@ const viewerItems: ViewerItem[] = [
     content: fwtAndText,
     comparedContent: fwtOrText,
     lang: "cpp" as const,
+  },
+  {
+    id: "5",
+    label: "config.toml",
+    content: configTomlText,
+    lang: "toml" as const,
   },
 ];
 

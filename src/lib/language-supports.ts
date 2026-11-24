@@ -9,16 +9,20 @@ import { rust } from "@codemirror/lang-rust";
 import { markdown } from "@codemirror/lang-markdown";
 import { json } from "@codemirror/lang-json";
 import { python } from "@codemirror/lang-python";
+import { toml } from "@codemirror/legacy-modes/mode/toml";
+import { LanguageSupport, StreamLanguage } from "@codemirror/language";
 import type { Extension } from "@codemirror/state";
 import { ExtensionMap } from "./extension-map";
 
 // Syntax highlighting supported by the code editor
-export type LangKind = "cpp" | "markdown" | "rust" | "text" | "json" | "python";
+export type LangKind = "cpp" | "markdown" | "rust" | "text" | "json" | "python" | "toml";
 
 const cppSupp = cpp();
 const rustSupp = rust();
 const jsonSupp = json();
 const pythonSupp = python();
+const tomlLang = StreamLanguage.define(toml);
+const tomlSupp = new LanguageSupport(tomlLang);
 const markdownSupp = markdown({
   codeLanguages(info) {
     if (["cpp", "c", "cxx"].includes(info)) {
@@ -32,6 +36,9 @@ const markdownSupp = markdown({
     }
     if (["python", "py"].includes(info)) {
       return pythonSupp.language;
+    }
+    if (info === "toml") {
+      return tomlLang;
     }
     return null;
   },
@@ -50,6 +57,7 @@ const langSuppMap: Record<LangKind, Extension> = {
   markdown: markdownSupp,
   json: jsonSupp,
   python: pythonSupp,
+  toml: tomlSupp,
 };
 
 const supportedLanguages: LangKind[] = Object.keys(langSuppMap) as LangKind[];
